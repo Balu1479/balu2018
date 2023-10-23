@@ -550,7 +550,7 @@ export default class JavaScriptExamples extends LightningElement {
             }
 
         })*/
-        const gbStudents =
+        /* const gbStudents =
         {
             "student": {
               "name": "bala",
@@ -573,16 +573,16 @@ export default class JavaScriptExamples extends LightningElement {
                 },
               ]
             }
-          }
+          } */
         const obj = JSON.parse('{"student":{"name":"bala","age":"33","subjects":[{"science":81,"Maths":"Cell content that is very long. It also has a line break. It has more than one line break","Telugu":"73","counrty":"FR"},{"science":82,"Maths":"Cell content that is very long. It also has a line break. It has more than one line break","Telugu":"73","counrty":"US"},{"science":82,"Maths":"Cell content that is very long. It also has a line break. It has more than one line break","Telugu":"73","counrty":"FR"}]}}');
         console.log('obj ---:',obj);
         console.log('obj subjects---:',obj.student.subjects);
         this.data = obj.student.subjects;
         console.log('subjects length ---:',obj.student.subjects.length);
         for(const item of obj.student.subjects){
-            this.totalscienceMarks += parseInt(item.science);
-            this.totalMathsMarks += parseInt(item.Maths);
-            this.totalTeluguMarks += parseInt(item.Telugu);
+            this.totalscienceMarks += parseFloat(item.science);
+            this.totalMathsMarks += parseFloat(item.Maths);
+            this.totalTeluguMarks += parseFloat(item.Telugu);
             console.log('totalscienceMarks ---:',this.totalscienceMarks);
             let regionNames = new Intl.DisplayNames(['en'], {type: 'region'});
             console.log('country name',regionNames.of(item.counrty));  // "United States"

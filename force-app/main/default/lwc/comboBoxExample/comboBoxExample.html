@@ -1,0 +1,19 @@
+<template>
+    <lightning-card title="Combo Box Example">
+        <lightning-combobox
+            name="progress"
+            label="Status"
+            value={value}
+            placeholder="Select Progress"
+            options={options}
+            onchange={handleChange} ></lightning-combobox>
+    <p>Selected value is: {value}</p><br/>
+    <div style="height: 300px;">
+        <lightning-datatable
+                key-field="id"
+                data={records}
+                columns={columnsNew}>
+        </lightning-datatable>
+    </div>
+    </lightning-card>
+</template>

@@ -1,25 +1,26 @@
-import { LightningElement } from 'lwc';
-
-export default class Pubsub extends LightningElement {
-    
-    callbacks = {};
-    register = (eventName , callback) =>{
+var callbacks = {};
+    const register = (eventName , callback) =>{
+        console.log('callback register--:',callback);
+        console.log('eventName register--:',eventName);
         if(!callbacks[eventName]){
-            this.callbacks[eventName] = new Set();
+            callbacks[eventName] = new Set();
         }
-        this.callbacks[eventName].add(callback);
+        callbacks[eventName].add(callback);
     };
-    unregister = (eventName , callback) =>{
-        if(this.callbacks[eventName]){
-            this.callbacks[eventName].delete(callback);
+    const unregister = (eventName , callback) =>{
+        if(callbacks[eventName]){
+            callbacks[eventName].delete(callback);
         }
     };
-    unregisterAll = () =>{
-        this.callbacks = {};
+    const unregisterAll = () =>{
+        callbacks = {};
     };
-    fire = (eventName , payload) =>{
-        if(this.callbacks[eventName]){
-            this.callbacks[eventName].forEach(callback => {
+    const fire = (eventName , payload) =>{
+        console.log('payload fire--:',payload);
+        console.log('eventName fire--:',eventName);
+        if(callbacks[eventName]){
+            callbacks[eventName].forEach(callback => {
+                console.log(' fire--:',callback);
                 try {
                     callback(payload);
                 }catch (error){
@@ -28,11 +29,9 @@ export default class Pubsub extends LightningElement {
             });
         }
     };
-    export = {
+    export default{
         register,
         unregister,
         fire,
         unregisterAll
     };
-
-}

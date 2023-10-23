@@ -1,0 +1,12 @@
+<template>
+    <template if:true={label}>
+        <label class="slds-form-element__label">{label}</label>
+    </template>
+    <template if:true={optionData} for:each={optionData} for:item='option'>
+        <template if:true={option.selected}>
+            <lightning-pill label={option.label} key={option.value} name={option.value} onremove={closePill}>
+                <lightning-icon icon-name="custom:custom11" alternative-text="Account"></lightning-icon>
+            </lightning-pill>
+        </template>
+    </template>
+</template>
