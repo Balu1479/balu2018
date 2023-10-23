@@ -130,7 +130,6 @@ public with sharing class AccountController {
             }
             
         }
-        
     }
     public static void upsertcontactRecords(list<Account> listAccs){
         //map<string,Account> mapContact = new map<string,Account>();
@@ -158,18 +157,15 @@ public with sharing class AccountController {
                 acc.Amount__c = records[i].Amount__c;
                 accs.add(acc);
             }
-            
             upsert accs;
         }
     }
-    
     @AuraEnabled
     public static List<Account> getAccounts(){
         return [SELECT Id, Name, Industry, Site, Amount__c 
                 from ACCOUNT 
                 Where Industry != NULL ORDER BY createdDate DESC LIMIT 10];
     }
-    
     @AuraEnabled
     public static String deleteAccounts(String toDeleteId){
         List<account> acc = new List<Account>();
@@ -215,5 +211,4 @@ public with sharing class AccountController {
         }
         return accountIds;
     }
-    
 }
