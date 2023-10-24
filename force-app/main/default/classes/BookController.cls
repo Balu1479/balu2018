@@ -137,5 +137,12 @@ public with sharing class BookController {
           @auraEnabled public string custFldlabel {get;set;}
           @auraEnabled public string custFldvalue {get;set;}
         }
-
+        @AuraEnabled(Cacheable = true)
+        public static List<Book__c> getBooks() {
+            return [SELECT Id, Category__c, Count__c, Price__c,Delivery_Time__c,US_Price__c
+                    FROM Book__c 
+                    WHERE Category__c != null
+                    AND Count__c != null WITH SECURITY_ENFORCED
+                    ORDER BY CreatedDate limit 20];
+        }
 }

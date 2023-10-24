@@ -1,12 +1,13 @@
 <template>
     <lightning-card title="Simple Calculator">
+        <P>Account Ids : {accountIds}</P>
         <div class="slds-size_1-of-3">
             <lightning-input label="First Number" value={firstNumber} onchange={handleChange} required=""></lightning-input>
             <lightning-input label="Second Number" value={secondNumber} onchange={handleChange} required=""></lightning-input>
-        </div><br></br>
+        </div><br/>
         <div if:true={result}>
             <p><b>Result : {result}</b></p>
-        </div><br></br>
+        </div><br/>
         <div>
             <lightning-button-group>
                 <div>

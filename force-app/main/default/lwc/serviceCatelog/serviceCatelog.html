@@ -1,0 +1,157 @@
+<template>
+    <lightning-card title="List Of Service Catelog Records">
+        <div class="slds-grid slds-gutters slds-clearfix">
+            <div class="slds-col">
+                <lightning-input
+                    placeholder='Search for Services..' type="search"
+                    onchange={handleSearch} class="slds-align_absolute-center"
+                    style="width: 200px;">
+                </lightning-input>
+            </div>
+            <div class="slds-col slds-size_1-of-3">
+                <lightning-button variant="brand" label="Show Service Details"
+                    onclick={showModal}
+                    class="slds-float_right">
+                </lightning-button>
+            </div>
+        </div>
+        <div>
+            <lightning-button label="Download" variant='brand' onclick={handleDownload} icon-name="utility:download" icon-position="right"></lightning-button>
+            <!-- <lightning-checkbox-group name="domain" label="Domain Name"
+                options={domainOptionsFinal} value={selectedValue} onchange={handleDomainChange}>
+            </lightning-checkbox-group> -->
+            <!-- <lightning-combobox name="domain" value={domainselectedValue}
+                placeholder="Domain options" options={domainOptionsNew}
+                onchange={handleDomainChange} class="slds-float_right">
+            </lightning-combobox> -->
+            <lightning-combobox label="Select Domain" name="progress" value={selectedValue}
+                placeholder="Select Domain Type" options={domainOptionsFinal}
+                onchange={handleChange} class="slds-float_right" disabled={isDomain}>
+            </lightning-combobox>
+            <lightning-combobox label="Select Sub Domain" name="progress" value={subSelectedValue}
+                placeholder="Select Sub Domain Type" class="slds-float_right"
+                options={subdomainOptionsFinal} onchange={subhandleChange} disabled ={isSubDomain}>
+            </lightning-combobox>
+        </div><br />
+        <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+            <thead>
+                <tr class="slds-line-height_reset">
+                    <th class scope="col">
+                        <div class="slds-truncate">
+                            <lightning-input onchange={allSelected}
+                                type="checkbox"></lightning-input>
+                        </div>
+                    </th>
+                    <th class scope="col">
+                        <div class="slds-truncate" title="Service Id">Service Id</div>
+                    </th>
+                    <th class scope="col">
+                        <div class="slds-truncate" title="Name">Name</div>
+                    </th>
+                    <th class scope="col">
+                        <div class="slds-truncate" title="Count">Domain Name</div>
+                    </th>
+                    <th class scope="col">
+                        <div class="slds-truncate" title="Count">Sub Domain Name</div>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <template for:each={catelogList} for:item="item">
+                    <tr class="slds-hint-parent" key={item.id}>
+                        <th scope="col">
+                            <div>
+                                <lightning-input type="checkbox"
+                                    value={item.name} data-name="temp"
+                                    data-id={item.serviceId}></lightning-input>
+                            </div>
+                        </th>
+                        <th data-label="serviceId">
+                            <div class="slds-truncate" title="serviceId">{item.serviceId}</div>
+                        </th>
+                        <th data-label="Name">
+                            <div class="slds-truncate" title="Name">{item.name }</div>
+                        </th>
+                        <th data-label="domainName">
+                            <div class="slds-truncate" title="Name">{item.domainName
+                                }</div>
+                        </th>
+                        <th data-label="subDomainName">
+                            <div class="slds-truncate" title="Name">{item.subDomainName
+                                }</div>
+                        </th>
+                    </tr>
+                </template>
+            </tbody>
+        </table>
+    </lightning-card>
+    <template if:true={isShowModal}>
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01"
+            aria-modal="true"
+            aria-describedby="modal-content-id-1"
+            class="slds-modal slds-fade-in-open slds-modal_large">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <button
+                        class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
+                        title="Close" onclick={hideModalBox}>
+                        <lightning-icon icon-name="utility:close"
+                            alternative-text="close" variant="inverse"
+                            size="small"></lightning-icon>
+                        <span class="slds-assistive-text">Close</span>
+                    </button>
+                    <h2 id="modal-heading-01"
+                        class="slds-text-heading_medium slds-hyphenate">Service
+                        And Pre Requisite
+                        Service Details</h2>
+                </header>
+                <div class="slds-modal__content slds-p-around_medium"
+                    id="modal-content-id-1">
+                    <lightning-button-group>
+                        <lightning-button label="Catelog Service"
+                            onclick={showModal}
+                            variant="brand"></lightning-button>&nbsp;&nbsp;&nbsp;&nbsp;
+                        <lightning-button label="Pre Requisite Services"
+                            variant="brand"
+                            onclick={fetchPreRequisiteRecords}></lightning-button>
+                    </lightning-button-group>
+                    <template if:true={isServices} for:each={selectedServices}
+                        for:item="each">
+                        <dl class="slds-list_horizontal slds-wrap"
+                            if:true={each.Id} key={each.Id}>
+                            <dt class="slds-item_label slds-truncate"
+                                title="Service Id">Service Id:</dt>
+                            <dd class="slds-item_detail slds-truncate">{each.Id}</dd>
+                            <dt class="slds-item_label slds-truncate"
+                                title="Service Name">Service Name:</dt>
+                            <dd class="slds-item_detail slds-truncate">{each.name}</dd>
+                            <hr>
+                        </dl>
+                    </template>
+                    <div>
+                        <template if:true={isPrereqisite}
+                            for:each={prerequisiteCatalogues} for:item="each">
+                            <dl class="slds-list_horizontal slds-wrap"
+                                if:true={each.id} key={each.id}>
+                                <dt class="slds-item_label slds-truncate"
+                                    title="Service Id">Service Id:</dt>
+                                <dd class="slds-item_detail slds-truncate">{each.preServiceId}</dd>
+                                <dt class="slds-item_label slds-truncate"
+                                    title="Service Name">Service Name:</dt>
+                                <dd class="slds-item_detail slds-truncate">{each.name}</dd>
+                                <hr>
+                            </dl>
+                        </template>
+                    </div>
+                </div>
+                <footer class="slds-modal__footer">
+                    <button class="slds-button slds-button_neutral"
+                        onclick={hideModalBox}>Cancel</button>
+                    <button class="slds-button slds-button_neutral"
+                        onclick={createBookRecord}>Save</button>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+</template>

@@ -1,0 +1,24 @@
+<template>
+    <p>Array examples</p>
+    <lightning-button-group>
+        <lightning-button label="Array Filter" onclick={handleArray}></lightning-button>&nbsp;
+        <lightning-button label="Array Find" onclick={handleArrayWithKeyVaue}></lightning-button>&nbsp;
+        <lightning-button label="For Each" onclick={forEachMethod}></lightning-button>&nbsp;
+        <lightning-button label="For Loop" onclick={forLoopMethod}></lightning-button>&nbsp;
+        <lightning-button label="Array Map" onclick={mapforLoopMethod}></lightning-button>&nbsp;
+        <lightning-button label="Array Push" onclick={pushforLoopMethod}
+            variant="brand"></lightning-button>&nbsp;
+    </lightning-button-group><br />
+    <p>Object examples</p>
+    <lightning-button-group>
+        <lightning-button label="Object Method" onclick={handleObject}></lightning-button>&nbsp;
+        <lightning-button label="Array Find" onclick={handlePrerequisites}></lightning-button>&nbsp;
+        <!-- <lightning-button label="For Each" onclick={forEachMethod}></lightning-button>&nbsp;
+        <lightning-button label="For Loop" onclick={forLoopMethod}></lightning-button>&nbsp;
+        <lightning-button label="Array Map" onclick={mapforLoopMethod}></lightning-button>&nbsp;
+        <lightning-button label="Array Push" onclick={pushforLoopMethod} variant="brand"></lightning-button>&nbsp; -->
+    </lightning-button-group>
+    <lightning-checkbox-group name="Checkbox Group" label="Checkbox Group"
+        options={options} value={checkboxvalue} onchange={handleChange}>
+    </lightning-checkbox-group>
+</template>

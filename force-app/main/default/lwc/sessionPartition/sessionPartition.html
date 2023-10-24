@@ -1,0 +1,7 @@
+<template>
+    <br />Partition with Namespace Prefix: <lightning-input value={partitionInput} onchange={handlePartitionInput}></lightning-input>
+    <br />Counter Key Name: <lightning-input value={counterKeyInput} onchange={handleCounterKey}></lightning-input>
+    <br />Counter Initial Value: <lightning-input value={counterInitValue} onchange={handleCounterInitValue}></lightning-input>
+    <lightning-button label="Save" varient="brand" onclick={Save}></lightning-button>
+    <br/>Cached Counter: <lightning-output-field value={counter}></lightning-output-field>
+</template>

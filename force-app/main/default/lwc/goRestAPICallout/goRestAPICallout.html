@@ -1,10 +1,20 @@
 <template>
-    <lightning-card title="List Of Users From Gorest Website Rest API Callout Mthod">
-        <div style="height: 10px"></div>
-        <lightning-datatable 
-        key-field="id" 
-        data={data} 
-        columns={columns}>
+    <div>
+        <!-- <lightning-input placeholder = 'Search for users..' type="search" onchange={handleSearch}></lightning-input> -->
+        <c-search-gorest-users onsearch={handleSearch}></c-search-gorest-users>
+        <lightning-combobox name="progress" value={selectedValue} style="width: 200px;"
+            placeholder="Select Staus" options={options} onchange={handleChange}>
+        </lightning-combobox>
+    </div><br />
+    <div title="List Of Users From Gorest Website Rest API Callout Mthod">
+        <lightning-datatable
+            key-field="id"
+            data={data}
+            columns={columns}>
         </lightning-datatable>
-    </lightning-card>
+    </div><br />
+    <div>
+        <lightning-button label="Create Event" icon-name="utility:upload"
+            onclick={btnhandler}></lightning-button>
+    </div>
 </template>
