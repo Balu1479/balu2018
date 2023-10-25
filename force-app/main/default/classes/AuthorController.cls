@@ -3,7 +3,7 @@ public with sharing class AuthorController {
     public static list<Author__c> getAuthorRecords(String searchKey){
         String key = '%' + searchKey + '%';
         try {
-            return [select id,name,Age__c,isActive__c from Author__c where name like :key limit 1000];
+            return [select id,name,Age__c,isActive__c from Author__c where name like :key WITH SECURITY_ENFORCED limit 1000];
         } catch (Exception e) {
             throw new AuraHandledException(e.getMessage());
         }
@@ -24,7 +24,9 @@ public with sharing class AuthorController {
             au.Age__c = age;
             au.isActive__c = active;
             system.debug('au---:'+au);
-            insert au;
+            if(au != null && Schema.sObjectType.Author__c.isCreateable()){
+                insert au;
+            }
         } catch (Exception e) {
             throw new AuraHandledException(e.getMessage());
         }
@@ -33,8 +35,8 @@ public with sharing class AuthorController {
     public static void deleteAthuorRecords(string str){
         system.debug('str---:'+str);
         try {
-            Author__c atr = [Select id,name from Author__c where id=:str];
-            if(atr != null){
+            Author__c atr = [Select id,name from Author__c where id=:str WITH SECURITY_ENFORCED];
+            if(atr != null && Schema.sObjectType.Author__c.isDeletable()){
                 delete atr;
             }
         } catch (Exception e) {
@@ -51,7 +53,9 @@ public with sharing class AuthorController {
             Author__c ath = new Author__c();
             ath.Name = name;
             ath.Age__c = age;
-            update ath;
+            if(Schema.sObjectType.Author__c.isUpdateable()){
+                update ath;
+            }
             return null;
         } catch (Exception e) {
             throw new AuraHandledException(e.getMessage());
