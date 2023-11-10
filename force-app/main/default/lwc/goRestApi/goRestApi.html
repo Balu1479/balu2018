@@ -7,6 +7,11 @@
             placeholder="Select Staus" options={options}
             onchange={handleChange}>
         </lightning-combobox>
+        <lightning-combobox name="progress" value={selectedMultipleValue}
+            style="width: 200px;"
+            placeholder="Select Multiple Staus" options={options}
+            onchange={handleMultipleChange}>
+        </lightning-combobox>
     </div><br />
     <div title="List Of Users From Gorest Website Fetch Mthod">
         <lightning-datatable

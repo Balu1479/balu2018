@@ -1,112 +1,124 @@
-import { LightningElement, track, api } from 'lwc';
-import { ShowToastEvent } from 'lightning/platformShowToastEvent';
-export default class MultiSelectPickList extends LightningElement {
-    @api picklistInput = ["Bala", "Rajee", "Moksha", "Madhu", "Lavanya", "Meena", "Tarun"];
+import { LightningElement,api, track } from 'lwc';
+
+export default class PicklistComboBox extends LightningElement {
+    // API Variables
+    @api picklistInput = ["Sales Cloud", "Service Cloud", "Marketing Cloud", "Commerce Cloud", "App Cloud", "Einstein Analytics", "Community Cloud", "IOTCloud", "Force.com", "Salesforce For Fresher", "Salesforce"];
     @api selectedItems = [];
-    @track allValues = [];
-    @track searchTerm = '';
-    @track valuesVal = undefined;
-    //mouse = false;
-    //showDropdown = false;
-    //focus = false;
-    //blrred = false;
-    @track selectionlimit = 5;
+
+    // Track Variables
+    @track allValues = []; // this will store end result or selected values from picklist
     @track selectedObject = false;
+    @track valuesVal = undefined;
+    @track searchTerm = '';
+    @track showDropdown = false;
     @track itemcounts = 'None Selected';
+    @track selectionlimit = 10;
     @track showselectall = false;
     @track errors;
-    /* connectedCallback(){
-        this.picklistInput;
-    } */
-    handleSearch(event){
-        this.searchTerm = event.detail.value;
-        this.mouse = false;
-        this.showDropdown = true;
-        this.focus = false;
-        this.blrred = false;
-        if(this.selectedItems.length != 0){
-            if(this.selectedItems.length >= this.selectionlimit){
-                this.showDropdown = false;
-            }
-        }
-    }
-    get filteredResults(){
-        if(this.valuesVal == undefined){
+    //this function is used to show the dropdown list
+    get filteredResults() {
+        //copying data from parent component to local variables
+        if (this.valuesVal == undefined) {
             this.valuesVal = this.picklistInput;
-            Object.keys(this.valuesVal).map(eachValue =>{
-                this.allValues.push({Id:eachValue, Name:this.valuesVal[eachValue]});
+            //below method is used to change the input which we received from parent component
+            //we need input in array form, but if it's coming in JSON Object format, then we can use below piece of code to convert object to array
+            Object.keys(this.valuesVal).map(profile => {
+                this.allValues.push({ Id: profile, Name: this.valuesVal[profile] });
             })
+
             this.valuesVal = this.allValues.sort(function (a, b) { return a.Id - b.Id });
             this.allValues = [];
+
             console.log('da ', JSON.stringify(this.valuesVal));
         }
-        console.log('allValues--:'+this.allValues);
-        console.log('valuesVal--:'+JSON.stringify(this.valuesVal));
-        if(this.valuesVal != null && this.valuesVal.length != 0){
-            if(this.valuesVal){
+
+        if (this.valuesVal != null && this.valuesVal.length != 0) {
+            if (this.valuesVal) {
+                const selectedProfileNames = this.selectedItems.map(profile => profile.Name);
+                console.log('selectedProfileNames ', JSON.stringify(selectedProfileNames));
                 console.log('this.valuesVal ', JSON.stringify(this.valuesVal));
-                const selectedNames = this.selectedItems.map(eachName => eachName.Name);
-                //console.log('selectedNames ', JSON.stringify(selectedNames));
                 return this.valuesVal.map(profile => {
+
                     //below logic is used to show check mark (✓) in dropdown checklist
-                    const isChecked = selectedNames.includes(profile.Id);
+                    const isChecked = selectedProfileNames.includes(profile.Id);
                     return {
                         ...profile,
                         isChecked
                     };
+
                 }).filter(profile =>
                     profile.Id.toLowerCase().includes(this.searchTerm.toLowerCase())
                 ).slice(0, 20);
             } else {
                 return [];
             }
-        } 
+        }
     }
-    handleSelection(event){
-        const selectedNameId = event.target.value;
+
+    //this function is used to filter/search the dropdown list based on user input
+    handleSearch(event) {
+        this.searchTerm = event.target.value;
+        this.showDropdown = true;
+        this.mouse = false;
+        this.focus = false;
+        this.blurred = false;
+        if (this.selectedItems.length != 0) {
+            if (this.selectedItems.length >= this.selectionlimit) {
+                this.showDropdown = false;
+            }
+        }
+    }
+
+    //this function is used when user check/uncheck/selects (✓) an item in dropdown picklist
+    handleSelection(event) {
+        const selectedProfileId = event.target.value;
         const isChecked = event.target.checked;
-        if(this.selectedItems.length < this.selectionlimit){
-            if(isChecked){
-                const selectedName = this.valuesVal.find(eachName => eachName.Id === selectedNameId);
-                if(selectedName){
-                    this.selectedItems = [ ...this.selectedItems, selectedName];
-                    this.allValues.push(selectedNameId);
+
+        //if part will run if selected item is less than selection limit
+        //else part will run if selected item is equal or more than selection limit
+        if (this.selectedItems.length < this.selectionlimit) {
+
+            //below logic is used to show check mark (✓) in dropdown checklist
+            if (isChecked) {
+                const selectedProfile = this.valuesVal.find(profile => profile.Id === selectedProfileId);
+                if (selectedProfile) {
+                    this.selectedItems = [...this.selectedItems, selectedProfile];
+                    this.allValues.push(selectedProfileId);
                 }
             } else {
-                this.selectedItems = this.selectedItems.filter(profile => profile.Id !== selectedNameId);
-                this.allValues.splice(this.allValues.indexOf(selectedNameId), 1);
+                this.selectedItems = this.selectedItems.filter(profile => profile.Id !== selectedProfileId);
+                this.allValues.splice(this.allValues.indexOf(selectedProfileId), 1);
             }
         } else {
-            const event = new ShowToastEvent({
-                title: 'Toast message',
-                message: 'Please Select all option',
-                variant: 'Info',
-                mode: 'dismissable'
-            });
-            this.dispatchEvent(event);
+
             //below logic is used to when user select/checks (✓) an item in dropdown picklist
             if (isChecked) {
                 this.showDropdown = false;
                 this.errormessage();
-            } else {
-                this.selectedItems = this.selectedItems.filter(profile => profile.Id !== selectedNameId);
-                this.allValues.splice(this.allValues.indexOf(selectedNameId), 1);
+            }
+            else {
+                this.selectedItems = this.selectedItems.filter(profile => profile.Id !== selectedProfileId);
+                this.allValues.splice(this.allValues.indexOf(selectedProfileId), 1);
                 this.errormessage();
             }
         }
         this.itemcounts = this.selectedItems.length > 0 ? `${this.selectedItems.length} options selected` : 'None Selected';
+
         if (this.itemcounts == 'None Selected') {
             this.selectedObject = false;
         } else {
             this.selectedObject = true;
         }
     }
+
+    //custom function used to close/open dropdown picklist
     clickhandler(event) {
         this.mouse = false;
         this.showDropdown = true;
         this.clickHandle = true;
         this.showselectall = true;
     }
+
     //custom function used to close/open dropdown picklist
     mousehandler(event) {
         this.mouse = true;
@@ -140,6 +152,7 @@ export default class MultiSelectPickList extends LightningElement {
         this.allValues.splice(this.allValues.indexOf(valueRemoved), 1);
         this.itemcounts = this.selectedItems.length > 0 ? `${this.selectedItems.length} options selected` : 'None Selected';
         this.errormessage();
+
         if (this.itemcounts == 'None Selected') {
             this.selectedObject = false;
         } else {
@@ -163,13 +176,16 @@ export default class MultiSelectPickList extends LightningElement {
     //this function is used to select/check (✓) all of the items in dropdown picklist
     selectall(event) {
         event.preventDefault();
+
         if (this.valuesVal == undefined) {
             this.valuesVal = this.picklistinput;
+
             //below method is used to change the input which we received from parent component
             //we need input in array form, but if it's coming in JSON Object format, then we can use below piece of code to convert object to array
             Object.keys(this.valuesVal).map(profile => {
                 this.allValues.push({ Id: profile, Name: this.valuesVal[profile] });
             })
+
             this.valuesVal = this.allValues.sort(function (a, b) { return a.Id - b.Id });
             this.allValues = [];
         }
@@ -188,6 +204,7 @@ export default class MultiSelectPickList extends LightningElement {
         this.errormessage();
         this.selectedObject = true;
     }
+
     //this function is used to show the custom error message when user is trying to select picklist items more than selectionlimit passed by parent component  
     errormessage() {
         this.errors = {
@@ -196,6 +213,7 @@ export default class MultiSelectPickList extends LightningElement {
         this.template.querySelectorAll("lightning-input").forEach(item => {
             let label = item.label;
             if (label == 'Search Objects') {
+
                 // if selected items list crosses selection limit, it will through custom error
                 if (this.selectedItems.length >= this.selectionlimit) {
                     item.setCustomValidity(this.errors[label]);
@@ -207,4 +225,5 @@ export default class MultiSelectPickList extends LightningElement {
             }
         });
     }
+
 }

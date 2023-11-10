@@ -22,7 +22,6 @@ public with sharing class CustomLookupController {
     public static sObject searchDefaultRecord(String recordId, String sObjectApiName){
         String recordIdvalue = recordId;
         String sQuery = 'Select id,name from '+sObjectApiName+ ' Where Id =: recordIdvalue limit 1';
-        System.debug('query--:'+sQuery);
         for(sObject obj : Database.query(sQuery)){
             return obj;
         }
