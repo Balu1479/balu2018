@@ -1,4 +1,3 @@
-import SystemModstamp from "@salesforce/schema/Account.SystemModstamp";
 import { LightningElement, track } from "lwc";
 const column = [
   { label: "Name", fieldName: "name"},
@@ -12,9 +11,12 @@ const column = [
   { label: "Status", fieldName: "status", type: "text"/* , initialWidth: 500  */}
 ];
 export default class GoRestApi extends LightningElement {
-  data = [];
+  @track data = [];
   columns = column;
-  initialRecords = [];
+  @track initialRecords = [];
+  @track selectedUserRecords = [];
+  showMultipleOptions = false;
+  isSelected = false;
   connectedCallback() {
     this.fetchUserData();
   }
@@ -26,7 +28,7 @@ export default class GoRestApi extends LightningElement {
         //console.log(repos);
         this.data = repos;
         this.initialRecords = repos;
-        //console.log(this.data);
+        //console.log('data',this.data);
       });
   }
   handleUpload(event) {
@@ -41,11 +43,11 @@ export default class GoRestApi extends LightningElement {
   }
   get options() {
     return [
-      { label: "All", value: "All" },
-      { label: "Inactive", value: "inactive" },
-      { label: "Active", value: "active" },
-      { label: "Male", value: "male" },
-      { label: "Female", value: "female" }
+      { label: "All", value: "All",Id:"1" },
+      { label: "Inactive", value: "inactive" ,Id:"2"},
+      { label: "Active", value: "active",Id:"3"},
+      { label: "Male", value: "male" ,Id:"4"},
+      { label: "Female", value: "female",Id:"5" }
     ];
   }
   filter() {
@@ -92,5 +94,26 @@ export default class GoRestApi extends LightningElement {
     } else {
       this.data = this.initialRecords;
     }
+  }
+  handleSelection(event) {
+    this.isSelected = true;
+    const isChecked = event.target.checked;
+    const selectedStatus = event.target.value;
+    for (let eachStatus of this.data) {
+        console.log('eachStatus', JSON.stringify(eachStatus));
+      //if(isChecked){
+        if (eachStatus.status === selectedStatus || eachStatus.gender === selectedStatus) {
+          this.selectedUserRecords.push(eachStatus);
+        }
+      //}
+    }
+    this.data = this.selectedUserRecords;
+  }
+  handleMultipleChange(){
+    this.showMultipleOptions = true;
+  }
+  showUserRecords() {
+    console.log('selectedUserRecords',this.selectedUserRecords);
+    this.data = this.selectedUserRecords;
   }
 }

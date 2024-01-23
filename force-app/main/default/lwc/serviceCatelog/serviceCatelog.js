@@ -2,8 +2,31 @@ import { LightningElement, track } from "lwc";
 import getServiceCatelogRecords from "@salesforce/apex/ServiceCatelogController.getServiceCatelogRecords";
 import preRequisiteRecords from "@salesforce/apex/ServiceCatelogController.preRequisiteRecords";
 import { ShowToastEvent } from "lightning/platformShowToastEvent";
+import ServiceCatelogRecords from "@salesforce/label/c.ServiceCatelogRecords";
+import Download from "@salesforce/label/c.Download";
+import ShowServiceDetails from "@salesforce/label/c.ShowServiceDetails";
+import PrerequisiteServices from "@salesforce/label/c.PrerequisiteServices";
+import PrerequisiteServicesTable from "@salesforce/label/c.PrerequisiteServicesTable";
+import Close from "@salesforce/label/c.Close"; 
+import Cancel from "@salesforce/label/c.Cancel"; 
+import Save from "@salesforce/label/c.Save";
 const allValue = [{ label: "All", value: "All" }];
+const columns = [
+    { label: 'Service Name', fieldName: 'name' },
+    { label: 'Service Id', fieldName: 'preServiceId' },
+];
 export default class ServiceCatelog extends LightningElement {
+  label = {
+    ServiceCatelogRecords,
+    Download,
+    ShowServiceDetails,
+    PrerequisiteServices,
+    PrerequisiteServicesTable,
+    Close,
+    Cancel,
+    Save
+  }
+  columns = columns;
   @track error;
   @track catelogList = [];
   @track initialRecords = [];
@@ -13,6 +36,7 @@ export default class ServiceCatelog extends LightningElement {
   @track selectedServices;
   @track preRequisiteService = [];
   isPrereqisite = false;
+  isPrereqisiteTable = false;
   isServices = false;
   @track prerequisiteCatalogues = [];
   selectedValue = '';
@@ -22,7 +46,7 @@ export default class ServiceCatelog extends LightningElement {
   @track subdomainOptions = [];
   @track domainOptionsFinal;
   @track subdomainOptionsFinal;
-  //@track domainOptionsNew = ['domainName','subDomainName'];
+  prerequisiteRecordsCount;
   columnHeader = ["Service ID", "Name", "Domain Name", "Sub Domain Name"];
   connectedCallback() {
     this.fetchCatelogRecords();
@@ -44,6 +68,7 @@ export default class ServiceCatelog extends LightningElement {
             });
           }
         }
+        console.log('this.preRequisiteService',this.preRequisiteService);
         let subOtions = [];
         for (let key in this.catelogList) {
           if (Object.hasOwn(this.catelogList, key)) {
@@ -123,7 +148,6 @@ export default class ServiceCatelog extends LightningElement {
   allSelected(event) {
     let selectedRows = this.template.querySelectorAll("lightning-input");
     for (let i = 0; i < selectedRows.length; i++) {
-      //console.log("selectedRows---:" + this.selectedRows);
       if (selectedRows[i].type === "checkbox") {
         selectedRows[i].checked = event.target.checked;
       }
@@ -150,12 +174,14 @@ export default class ServiceCatelog extends LightningElement {
       }
     });
   } */
-  fetchPreRequisiteRecords() {
+  fetchPreRequisiteRecords(event) {
     this.isServices = false;
     this.isPrereqisite = true;
+    //let serid = event.target.dataset.id;
     let serviceId = this.selectedServices[0].Id;
     let items = [];
     items = JSON.parse(JSON.stringify(this.preRequisiteService));
+    console.log('items',items);
     for (let key of items) {
       for (let val of key) {
         if (val.serviceId === serviceId) {
@@ -174,13 +200,6 @@ export default class ServiceCatelog extends LightningElement {
       this.dispatchEvent(evnt);
     }
   }
-  /* get options(){
-        return [
-            {label: 'All', value: 'All'},
-            {label: 'Domain Name', value: 'Custom'},
-            {label: 'Sub Domain Name', value: 'Power & Cooling'}
-        ];
-    } */
   handleChange(event) {
     this.selectedValue = event.detail.value;
     if (this.selectedValue === "All"){
@@ -293,7 +312,6 @@ export default class ServiceCatelog extends LightningElement {
     let downloadElement = document.createElement("a");
     downloadElement.href = element;
     downloadElement.target = "_self";
-    // use .csv as extension on below line if you want to export data as csv
     downloadElement.download = "Service Catalogue Data.xls";
     document.body.appendChild(downloadElement);
     downloadElement.click();
@@ -312,11 +330,45 @@ export default class ServiceCatelog extends LightningElement {
     }
     console.log('domainselectedvalue',this.domainselectedValue);
   }
-  /* disableDomainOptions(){
-    if(this.subSelectedValue != 'All'){
-      this.selectedValue = 'All';
-      this.isDomain = true;
+  cancil() {
+    this.isPrereqisiteTable = false;
+  }
+  fetchPreRequisiteRecordsForTable(event) {
+    this.isServices = false;
+    this.isPrereqisiteTable = true;
+    let serviceId = [ ...this.template.querySelectorAll('lightning-input')].filter(element => element.checked).map(element => element.dataset.id);
+    console.log('serviceId',serviceId);
+    let items = [];
+    let services = [];
+    let preServices = [];
+    items = JSON.parse(JSON.stringify(this.preRequisiteService));
+    console.log('items', JSON.stringify(items));
+    let map = new Map();
+        serviceId.forEach(value => {
+            console.log('value',value);
+            map.set(value, 'value'+ value);
+            });
+        console.log('map data',map);
+        for(let i=0; i < items.length; i++){
+            preServices = preServices.concat(items[i]);
+        }
+    for (let key of preServices) {
+      console.log('key',key);
+      if (map.has(key.serviceId)) {
+        services.push(key)
+      } 
     }
-    //return true;
-  } */
+    this.prerequisiteCatalogues = services;
+    this.prerequisiteRecordsCount = this.prerequisiteCatalogues.length;
+    if (this.prerequisiteCatalogues.length > 0) {
+      this.prerequisiteCatalogues = this.prerequisiteCatalogues;
+    } else {
+      const evnt = new ShowToastEvent({
+        title: "Pre Requisite services are not available for this Serive",
+        Variant: "Info",
+        message: "Pre Requisite services are not available for this Serive"
+      });
+      this.dispatchEvent(evnt);
+    }
+  }
 }

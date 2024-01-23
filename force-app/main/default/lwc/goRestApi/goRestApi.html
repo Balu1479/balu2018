@@ -2,22 +2,35 @@
     <div>
         <!-- <lightning-input placeholder = 'Search for users..' type="search" onchange={handleSearch}></lightning-input> -->
         <c-search-gorest-users onsearch={handleSearch}></c-search-gorest-users>
-        <lightning-combobox name="progress" value={selectedValue}
-            style="width: 200px;"
-            placeholder="Select Staus" options={options}
-            onchange={handleChange}>
-        </lightning-combobox>
-        <lightning-combobox name="progress" value={selectedMultipleValue}
-            style="width: 200px;"
-            placeholder="Select Multiple Staus" options={options}
-            onchange={handleMultipleChange}>
-        </lightning-combobox>
     </div><br />
+    <div class="slds-grid slds-gutters">
+        <div class="slds-col">
+            <lightning-combobox name="progress" value={selectedValue} style="width: 200px;" placeholder="Select Staus"
+                options={options} onchange={handleChange}>
+            </lightning-combobox>
+        </div>
+        <div class="slds-col">
+            <lightning-input type="search" name="progress" value={selectedMultipleValue} style="width: 200px;"
+                placeholder="Select Multiple Staus" options={multipleOptions} onclick={handleMultipleChange}>
+            </lightning-input>
+            <template if:true={showMultipleOptions}>
+                <ul>
+                    <template for:each={options} for:item="item">
+                        <li key={item.Id}>
+                            <lightning-input type="checkbox" checked={item.isChecked} label={item.label}
+                                value={item.value} onchange={handleSelection}></lightning-input>
+                        </li>
+                    </template>
+                </ul>
+            </template>
+            <div if:true={isSelected}>
+                <lightning-button label="Show User Records" value={data} onclick={showUserRecords}
+                    varient="brand"></lightning-button>
+            </div>
+        </div>
+    </div></br>
     <div title="List Of Users From Gorest Website Fetch Mthod">
-        <lightning-datatable
-            key-field="id"
-            data={data}
-            columns={columns}>
+        <lightning-datatable key-field="id" data={data} columns={columns}>
         </lightning-datatable>
     </div>
 </template>

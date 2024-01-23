@@ -1,4 +1,5 @@
 import { LightningElement, track, api } from 'lwc';
+import getAccountNames from '@salesforce/apex/AccountController.getAccountNames';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 export default class MultiSelectPickList extends LightningElement {
     @api picklistInput = ["Bala", "Rajee", "Moksha", "Madhu", "Lavanya", "Meena", "Tarun"];
@@ -15,15 +16,20 @@ export default class MultiSelectPickList extends LightningElement {
     @track itemcounts = 'None Selected';
     @track showselectall = false;
     @track errors;
-    /* connectedCallback(){
-        this.picklistInput;
-    } */
+    searchName = '';
+    accountNames = [];
+    @track selectedAccountItems = [];
+    accountsCount = 'None Selected';
+    selectionAccountLimit = 5;
+    connectedCallback(){
+        this.fetchAccountNames();
+    } 
     handleSearch(event){
         this.searchTerm = event.detail.value;
         this.mouse = false;
         this.showDropdown = true;
         this.focus = false;
-        this.blrred = false;
+        this.blurred = false;
         if(this.selectedItems.length != 0){
             if(this.selectedItems.length >= this.selectionlimit){
                 this.showDropdown = false;
@@ -77,13 +83,14 @@ export default class MultiSelectPickList extends LightningElement {
                 this.allValues.splice(this.allValues.indexOf(selectedNameId), 1);
             }
         } else {
-            const event = new ShowToastEvent({
+            this.showToast('Toast message', 'Please Select all option', 'Info', 'dismissable');
+            /* const event = new ShowToastEvent({
                 title: 'Toast message',
                 message: 'Please Select all option',
                 variant: 'Info',
                 mode: 'dismissable'
             });
-            this.dispatchEvent(event);
+            this.dispatchEvent(event); */
             //below logic is used to when user select/checks (✓) an item in dropdown picklist
             if (isChecked) {
                 this.showDropdown = false;
@@ -206,5 +213,83 @@ export default class MultiSelectPickList extends LightningElement {
                 item.reportValidity();
             }
         });
+    }
+    handleNameSearch(event){
+        this.searchName = event.target.value;
+        console.log('searchName--:',this.searchName);
+        this.showAccountDropdown = true;
+        this.mouse = false;
+        this.focus = false;
+        this.blurred = false;
+        if(this.selectedAccountItems != 0 && this.selectedAccountItems > this.selectionAccountLimit){
+            this.showAccountDropdown = true;
+        }
+    }
+    fetchAccountNames(){
+        getAccountNames().then((result) =>{
+            console.log('Account names',result);
+            this.accountNames = result;
+            console.log('Account names',this.accountNames);
+        })
+        .catch((error) =>{
+            this.error = error;
+        })
+        return this.accountNames;
+    }
+    handleAccountNameSelection(event){
+        const selctedNameId = event.target.value;
+        const isAccountNameChecked = event.target.checked;
+        if(this.selectedAccountItems.length < this.selectionAccountLimit){
+            if(isAccountNameChecked){
+                const selectedAccountNames = this.accountNames.find(accountName => accountName.Id === selctedNameId);
+                if(selectedAccountNames){
+                    this.selectedAccountItems = [...this.selectedAccountItems, selectedAccountNames];
+                    this.accountsCount = this.selectedAccountItems.length > 0 ? `${this.selectedAccountItems.length} Accounts Selected` : 'None Selected';
+                }
+            }
+        } else {
+            this.showToast('Toast message', 'Please Select all option for selecting the account names', 'Info', 'dismissable');
+        }
+        
+        this.showAccountDropdown = true;
+    }
+    handleAccountRemove(event){
+        const removeAccountName = event.target.name;
+        this.selectedAccountItems = this.selectedAccountItems.filter(accountNames => accountNames.Id !== removeAccountName);
+        this.accountsCount = this.selectedAccountItems.length > 0 ? `${this.selectedAccountItems.length} Accounts Selected` : 'None Selected';
+        if(this.accountsCount == 'None Selected'){
+            this.selectedObject = false;
+        } else {
+            this.selectedObject = true;
+        }
+    }
+    selectAccountsAll(event){
+        event.preventDefault();
+        this.selectedAccountItems = this.accountNames;
+        this.selectedObject = true;
+    }
+    handleAccountclearAll(event){
+        event.preventDefault();
+        this.selectedAccountItems = [];
+        this.accountsCount = 'None Selected';
+        this.accountNames = [];
+        this.searchName = '';
+        this.showAccountselectall = false;
+        this.selectedObject = false;
+    }
+    clickAccounthandler(){
+        //this.mouse = false;
+        this.showAccountDropdown = true;
+        this.clickAccountHandle = true;
+        this.showAccountselectall = true;
+    }
+    showToast(title, message, varient, mode){
+        const event = new ShowToastEvent({
+            title: title,
+            message: message,
+            variant: varient,
+            mode: mode
+        });
+        this.dispatchEvent(event);
     }
 }

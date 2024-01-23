@@ -1,0 +1,99 @@
+<template>
+    <div>
+        <lightning-button label="Show Indian Records" variant="brand"
+            onclick={showIndianRecords}></lightning-button>&nbsp;&nbsp;
+        <lightning-button label="Show Russia Records" variant="brand" onclick={showRussiaRecords}></lightning-button>
+    </div>
+    <template if:true={isCountriesAvailable}>
+        <lightning-input class="slds-p-left_xx-large" type="checkbox" data-id="checkbox" label="India"
+            onchange={handleIndiaChange}></lightning-input>
+        <div if:true={isStatesAvailable}>
+            <lightning-input class="slds-p-left_xx-large" type="checkbox" data-id="checkbox"
+                label='Select All India States' onchange={handleAll}></lightning-input>
+            <div for:each={states} for:item="item" key={id}>
+                <lightning-input class="slds-p-left_xx-large" type="checkbox" data-id="checkbox1" label={item.name}
+                    data-name={item.name} onchange={handleIndiaStatesChange}></lightning-input>
+            </div>
+        </div>
+        <lightning-input class="slds-p-left_xx-large" type="checkbox" data-id="checkbox" label="Russia"
+            onchange={handleRussiaChange}></lightning-input>
+        <div if:true={isRussiaStatesAvailable}>
+            <lightning-input class="slds-p-left_xx-large" type="checkbox" data-id="checkbox"
+                label='Select  All Russia States' onchange={handleRussiaAll}></lightning-input>
+            <div for:each={states} for:item="item" key={id}>
+                <lightning-input class="slds-p-left_xx-large" type="checkbox" data-id="checkbox2" label={item.name}
+                    data-name={item.name}></lightning-input>
+            </div>
+        </div>
+        <lightning-input class="slds-p-left_xx-large" type="checkbox" data-id="checkbox"
+            label="Japan"></lightning-input>
+    </template>
+    <template if:true={isShowModal}>
+        <section role="dialog" tabindex="-1" aria-modal="true" aria-labelledby="modal-heading-01"
+            class="slds-modal slds-fade-in-open slds-modal_medium">
+            <div class="slds-modal__container">
+                <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse">
+                    <svg class="slds-button__icon slds-button__icon_large" aria-hidden="true">
+                        <use xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
+                    </svg>
+                    <span class="slds-assistive-text">Cancel and close</span>
+                </button>
+                <div class="slds-modal__header">
+                    <h1 id="modal-heading-01" class="slds-modal__title slds-hyphenate">Student Records for selected
+                        State</h1>
+                </div>
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                    <div style="height: 300px;">
+                        <lightning-datatable key-field="id" data={students} columns={columns}>
+                        </lightning-datatable>
+                    </div>
+                </div>
+                <div class="slds-modal__footer">
+                    <button class="slds-button slds-button_neutral" aria-label="Cancel and close"
+                        onclick={cancel}>{label.Cancel}</button>
+                </div>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+    </template>
+    <!-- <template for:each={countries} for:item="item">
+        <lightning-input type="checkbox" key={id}></lightning-input>
+        {item.name}
+    </template> -->
+    <!-- <p class="slds-text-heading_small">{activeSectionMessage}</p>
+    <lightning-button onclick={handleSetActiveSectionC} label="Open Section C"></lightning-button>
+    <lightning-accordion class="example-accordion"
+                         onsectiontoggle={handleToggleSection}
+                         active-section-name="B">
+        <lightning-accordion-section name="A" label="Accordion Title A">
+            <lightning-button-menu slot="actions"
+                                  alternative-text="Show menu"
+                                  icon-size="x-small"
+                                  menu-alignment="right">
+                <lightning-menu-item value="New" label="Menu Item One"></lightning-menu-item>
+                <lightning-menu-item value="Edit" label="Menu Item Two"></lightning-menu-item>
+            </lightning-button-menu>
+            <p>This is the content area for section A.</p>
+            <p>.</p>
+            <p>.</p>
+            <p>.</p>
+            <p>The section height expands to fit your content.</p>
+        </lightning-accordion-section>
+
+        <lightning-accordion-section name="B" label="Accordion Title B">
+            <p>This is the content area for section B.</p>
+            <p>.</p>
+            <p>.</p>
+            <p>.</p>
+            <p>The section height expands to fit your content.</p>
+        </lightning-accordion-section>
+
+        <lightning-accordion-section name="C" label="Accordion Title C">
+            <p>This is the content area for section C.</p>
+            <p>.</p>
+            <p>.</p>
+            <p>.</p>
+            <p>The section height expands to fit your content.</p>
+        </lightning-accordion-section>
+    </lightning-accordion> -->
+</template>

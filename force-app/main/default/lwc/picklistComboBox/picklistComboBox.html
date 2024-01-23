@@ -1,7 +1,6 @@
 <template>
 	<lightning-card>
 		<div class="slds-m-left_large slds-m-right_large" onmouseleave={mousehandler}>
-
 			<!-- Below code is for lightning input search box which will filter picklist result based on inputs given by user -->
 			<lightning-input type="search" label="Search Objects" onchange={handleSearch} value={searchTerm} style="width: 400px;"
 				onblur={blurhandler} onfocusout={focuhandler} onclick={clickhandler} placeholder={itemcounts}>

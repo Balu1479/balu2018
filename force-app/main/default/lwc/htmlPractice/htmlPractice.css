@@ -1,0 +1,13 @@
+.username{
+    width: 100px;
+    font-weight: bold;
+    margin-right: 10px;
+    float: left;
+}
+.nametag{
+    font-weight: bold;
+    float: inline-start;
+}
+.mobile{
+    font-weight: bold;
+}

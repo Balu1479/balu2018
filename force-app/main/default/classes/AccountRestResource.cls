@@ -1,14 +1,13 @@
 @RestResource(urlMapping='/cases/*')
-global class AccountRestResource {
+global with sharing class AccountRestResource {
     @HttpGet
     global static list<case> getCaseRecords() {
         list<Case> result =  [SELECT CaseNumber,Subject,Status,Origin,Priority
-                        FROM Case Limit 10];
+                              FROM Case WITH SECURITY_ENFORCED Limit 10];
         return result;
     }
     @HttpPost
-    global static ID createCase(String subject, String status,
-        String origin, String priority) {
+    global static ID createCase(String subject, String status, String origin, String priority) {
         Case thisCase = new Case(
             Subject=subject,
             Status=status,
@@ -22,22 +21,18 @@ global class AccountRestResource {
         RestRequest request = RestContext.request;
         String caseId = request.requestURI.substring(
             request.requestURI.lastIndexOf('/')+1);
-        Case thisCase = [SELECT Id FROM Case WHERE Id = :caseId];
+        Case thisCase = [SELECT Id FROM Case WHERE Id = :caseId WITH SECURITY_ENFORCED];
         delete thisCase;
     }     
     @HttpPut
-    global static ID upsertCase(String subject, String status,
-        String origin, String priority, String id) {
+    global static ID upsertCase(String subject, String status,String origin, String priority, String id) {
         Case thisCase = new Case(
-                Id=id,
-                Subject=subject,
-                Status=status,
-                Origin=origin,
-                Priority=priority);
-        // Match case by Id, if present.
-        // Otherwise, create new case.
+            Id=id,
+            Subject=subject,
+            Status=status,
+            Origin=origin,
+            Priority=priority);
         upsert thisCase;
-        // Return the case ID.
         return thisCase.Id;
     }
     @HttpPatch
@@ -45,12 +40,9 @@ global class AccountRestResource {
         RestRequest request = RestContext.request;
         String caseId = request.requestURI.substring(
             request.requestURI.lastIndexOf('/')+1);
-        Case thisCase = [SELECT Id FROM Case WHERE Id = :caseId];
-        // Deserialize the JSON string into name-value pairs
+        Case thisCase = [SELECT Id FROM Case WHERE Id = :caseId WITH SECURITY_ENFORCED];
         Map<String, Object> params = (Map<String, Object>)JSON.deserializeUntyped(request.requestbody.tostring());
-        // Iterate through each parameter field and value
         for(String fieldName : params.keySet()) {
-            // Set the field and value on the Case sObject
             thisCase.put(fieldName, params.get(fieldName));
         }
         update thisCase;

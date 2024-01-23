@@ -1,0 +1,98 @@
+<template>
+    <!-- <template if:true={studentName}>
+        <div style="height: 300px;">
+            <lightning-datatable key-field="id" data={studentName} columns={columns}>
+            </lightning-datatable>
+        </div>
+    </template> -->
+    <div class="slds-clearfix">
+        <div class="slds-float_right">
+            <p>Selected Records Count: {selectedRecordsCount}</p>
+        </div>
+        <div class="slds-float_left">
+            <lightning-button label="Selected Records" onclick={getSelectedNames}
+                variant="brand"></lightning-button>
+        </div>
+    </div>
+    <template if:true={studentNamesObject}>
+        <div style="height: 300px;">
+            <lightning-datatable key-field="id" data={studentNamesObject} columns={columns}>
+            </lightning-datatable>
+        </div>
+    </template>
+    <div>
+        <ol style="list-style-type:disc;" for:each={selectedValues} for:item="item" key={item.id}>
+            <li>{item.name}</li>
+        </ol>
+    </div>
+    <p class="username">Bala Gongolla</p>
+    <div class="nametag">
+        <p>@balagongolla</p>
+        <p>I love to teach Salesforce!</p>
+    </div>
+    <div></div>
+    <div class="mobile">
+        <ol class="slds-list_ordered">
+            <li>Apple</li>
+            <li>Samsung</li>
+            <li>OnePlus</li>
+            <li>Nothing</li>
+        </ol>
+    </div>
+    <div class="mobile">
+        <ul style="list-style-type:disc;">
+            <li>XIOMi
+                <ul style="list-style-type:disc;">
+                    <li>Redmi</li>
+                    <li>Poco</li>
+                </ul>
+            </li>
+            <li>OnePlus</li>
+            <ul style="list-style-type:disc;">
+                <li>OnePlus Nord</li>
+                <li>OnePlus Nord CE</li>
+            </ul>
+        </ul>
+    </div>
+    <!-- <ol>
+        <li>Apple</li>
+        <li>Xiomi
+            <ul>
+                <li>MI</li>
+                <li>Redmi</li>
+                <li>Poco</li>
+            </ul>
+        </li>
+    </ol> -->
+    <ol>
+        <li>first item</li>
+        <li>
+            second item
+            <!-- closing </li> tag is not here! -->
+            <ul>
+                <li>second item first subitem</li>
+                <li>second item second subitem</li>
+                <li>second item third subitem</li>
+            </ul>
+        </li>
+        <!-- Here's the closing </li> tag -->
+        <li>third item</li>
+    </ol>
+    <ul>
+        <li>Apple</li>
+        <li>List Item</li>
+        <li>
+            <ul class="slds-is-nested">
+                <li>Nested Vertical List</li>
+                <li>List Item</li>
+                <li>
+                    <ul class="slds-is-nested">
+                        <li>Nested Vertical List</li>
+                        <li>List Item</li>
+                        <li>List Item</li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+    </ul>
+</template>

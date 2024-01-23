@@ -1,59 +1,103 @@
 <template>
-<lightning-card>
-<!-- Start Header Label Passed from Parent -->
-<template if:true={label}>
-<label class="slds-form-element__label">{label}</label>
-</template>
-<!-- End Header Label Passed from Parent -->
-    <!-- Search Input -->
-    <div class="slds-m-left_large slds-m-right_large" onmouseleave={mousehandler}>
-        <lightning-input type="search" label="Search Objects" onchange={handleSearch} value={searchTerm} style="width: 400px;"
-				onblur={blurhandler} onfocusout={focuhandler} onclick={clickhandler} placeholder={itemcounts}>
-			</lightning-input>
-        <div class="slds-grid slds-wrap">
-            <template if:true={showselectall}>
-                <div class="slds-col slds-large-size_10-of-12 slds-medium-size_1-of-12 slds-size_1-of-12">
-                    <a href="javascript.void(0)" onclick={selectall}>Select All</a>
-                </div>
-                <div class="slds-col slds-large-size_6-of-12 slds-medium-size_1-of-12 slds-size_1-of-12">
-                    <div class="slds-float_right">
-                        <a href="javascript.void(0)" onclick={handleclearall}>Clear All</a>
+    <lightning-card>
+        <!-- Start Header Label Passed from Parent -->
+        <template if:true={label}>
+            <label class="slds-form-element__label">{label}</label>
+        </template>
+        <!-- End Header Label Passed from Parent -->
+        <!-- Search Input -->
+        <div class="slds-m-left_large slds-m-right_large" onmouseleave={mousehandler}>
+            <lightning-input type="search" label="Search Objects" onchange={handleSearch} value={searchTerm}
+                style="width: 400px;" onblur={blurhandler} onfocusout={focuhandler} onclick={clickhandler}
+                placeholder={itemcounts}>
+            </lightning-input>
+            <div class="slds-grid slds-wrap">
+                <template if:true={showselectall}>
+                    <div class="slds-col slds-large-size_10-of-12 slds-medium-size_1-of-12 slds-size_1-of-12">
+                        <a href="javascript.void(0)" onclick={selectall}>Select All</a>
                     </div>
+                    <div class="slds-col slds-large-size_6-of-12 slds-medium-size_1-of-12 slds-size_1-of-12">
+                        <div class="slds-float_right">
+                            <a href="javascript.void(0)" onclick={handleclearall}>Clear All</a>
+                        </div>
+                    </div>
+                </template>
+                <template if:false={showselectall}>
+                    <div class="slds-col slds-large-size_10-of-12 slds-medium-size_1-of-12 slds-size_1-of-12">
+                    </div>
+                    <div class="slds-col slds-large-size_2-of-12 slds-medium-size_1-of-12 slds-size_1-of-12">
+                        <div class="slds-float_right">
+                            <a href="javascript.void(0)" onclick={handleclearall}>Clear All</a>
+                        </div>
+                    </div>
+                </template>
+            </div>
+            <!-- Below code will show dropdown picklist -->
+            <template if:true={showDropdown}>
+                <div class="slds-box_border " style="width:100%">
+                    <ul class="dropdown-list slds-dropdown_length-7 slds-p-left_medium">
+                        <template for:each={filteredResults} for:item="profile">
+                            <li key={profile.Id} class="dropdown-item">
+                                <lightning-input type="checkbox" checked={profile.isChecked} label={profile.Name}
+                                    value={profile.Id} onchange={handleSelection}>
+                                </lightning-input>
+                            </li>
+                        </template>
+                    </ul>
                 </div>
             </template>
-            <template if:false={showselectall}>
-                <div class="slds-col slds-large-size_10-of-12 slds-medium-size_1-of-12 slds-size_1-of-12">
+            <div class="selection-summary">
+                <div class="slds-p-around_x-small">
+                    <template for:each={selectedItems} for:item="selectedItem">
+                        <lightning-pill key={selectedItem.Id} label={selectedItem.Name} name={selectedItem.Id}
+                            onremove={handleRemove}></lightning-pill>
+                    </template>
                 </div>
-                <div class="slds-col slds-large-size_2-of-12 slds-medium-size_1-of-12 slds-size_1-of-12">
-                    <div class="slds-float_right">
-                        <a href="javascript.void(0)" onclick={handleclearall}>Clear All</a>
-                    </div>
-                </div>
-            </template>
+            </div>
         </div>
-        <!-- Below code will show dropdown picklist -->
-        <template if:true={showDropdown}>
-            <div class="slds-box_border " style="width:100%">
-                <ul class="dropdown-list slds-dropdown_length-7 slds-p-left_medium">
-                    <template for:each={filteredResults} for:item="profile">
-                        <li key={profile.Id} class="dropdown-item">
-                            <lightning-input type="checkbox" checked={profile.isChecked} label={profile.Name}
-                                value={profile.Id} onchange={handleSelection}>
-                            </lightning-input>
+        <!-- Below code is for Select/Clear All function -->
+    </lightning-card>
+    <lightning-card>
+        <div class="slds-m-left_large slds-m-right_large">
+            <lightning-input type="search" label="Search Names" onchange={handleNameSearch} value={searchName}
+                style="width: 400px;" placeholder={accountsCount} onclick={clickAccounthandler}></lightning-input>
+            <div class="slds-grid slds-wrap">
+                <template if:true={showAccountselectall}>
+                    <div class="slds-col slds-large-size_10-of-12 slds-medium-size_1-of-12 slds-size_1-of-12">
+                        <a href="javascript.void(0)" onclick={selectAccountsAll}>Select All</a>
+                    </div>
+                    <div class="slds-col slds-large-size_6-of-12 slds-medium-size_1-of-12 slds-size_1-of-12">
+                        <div class="slds-float_right">
+                            <a href="javascript.void(0)" onclick={handleAccountclearAll}>Clear All</a>
+                        </div>
+                    </div>
+                </template>
+                <template if:false={showAccountselectall}>
+                    <div class="slds-col slds-large-size_10-of-12 slds-medium-size_1-of-12 slds-size_1-of-12">
+                    </div>
+                    <div class="slds-col slds-large-size_2-of-12 slds-medium-size_1-of-12 slds-size_1-of-12">
+                        <div class="slds-float_right">
+                            <a href="javascript.void(0)" onclick={handleAccountclearAll}>Clear All</a>
+                        </div>
+                    </div>
+                </template>
+            </div>
+            <template if:true={showAccountDropdown}>
+                <ul>
+                    <template for:each={accountNames} for:item="item">
+                        <li key={item.Id} class="dropdown-item">
+                            <lightning-input type="checkbox" label={item.Name} value={item.Id}
+                                onchange={handleAccountNameSelection}></lightning-input>
                         </li>
                     </template>
                 </ul>
-            </div>
-        </template>
-        <div class="selection-summary">
-            <div class="slds-p-around_x-small">
-                <template for:each={selectedItems} for:item="selectedItem">
-                    <lightning-pill key={selectedItem.Id} label={selectedItem.Name} name={selectedItem.Id}
-                        onremove={handleRemove}></lightning-pill>
-                </template>
-            </div>
+            </template>
         </div>
-    </div>
-<!-- Below code is for Select/Clear All function -->
-</lightning-card>
+        <div>
+            <template for:each={selectedAccountItems} for:item="item">
+                <lightning-pill key={item.Id} label={item.Name} name={item.Id}
+                    onremove={handleAccountRemove}></lightning-pill>
+            </template>
+        </div>
+    </lightning-card>
 </template>

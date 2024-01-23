@@ -1,0 +1,18 @@
+<template>
+    <div title="Create Account record by Record form" style="width: 500px;">
+        <lightning-record-form object-api-name={accountObject} fields={myFields} onsuccess={craeteAccountRecord}>
+        </lightning-record-form>
+    </div>
+    <div class="slds-var-m-around_medium" style="width: 500px;">
+        <lightning-input label="Account Name" value={accountName} onchange={handleChange}></lightning-input>
+        <lightning-input label="Website" value={website} onchange={handleChange}></lightning-input></br>
+        <lightning-button label="Create Account" variant="brand"
+            onclick={createAccount}></lightning-button>&nbsp;&nbsp;&nbsp;
+        <lightning-button label="Cancil" variant="brand-outline" onclick={cancilAccount}></lightning-button>
+    </div>
+    <div if:true={isAvailableAccount}>
+        <p>Account Record Id: {accountId}</p>
+        <p>Account Name: {accountName}</p>
+        <p>Account Website: {website}</p>
+    </div>
+</template>

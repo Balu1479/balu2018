@@ -1,8 +1,8 @@
 public with sharing class AccountController {
-    @AuraEnabled
+    @AuraEnabled(cacheable = true)
     public static string getAccountsRecords(){
         try {
-            list<Account> listAccs = [Select id,name,industry,phone from Account WITH SECURITY_ENFORCED LIMIT 50 ];
+            list<Account> listAccs = [Select id,name,industry,phone,Site,Is_Active__c from Account WITH SECURITY_ENFORCED LIMIT 50 ];
             return  JSON.serialize(listAccs);
         } catch (Exception e) {
             throw new AuraHandledException(e.getMessage());
@@ -155,7 +155,7 @@ public with sharing class AccountController {
                 from ACCOUNT 
                 Where Industry != NULL WITH SECURITY_ENFORCED ORDER BY createdDate DESC LIMIT 10];
     }
-    @AuraEnabled
+    /* @AuraEnabled
     public static String deleteAccounts(String toDeleteId){
         String status;
         List<account> acc = new List<Account>();
@@ -181,7 +181,7 @@ public with sharing class AccountController {
             status = errorMessages[0];
         }
         return status;
-    }
+    } */
     @AuraEnabled
     public static List<string> getAccountIds(){
         List<string> accountIds = new List<string>();
@@ -193,5 +193,80 @@ public with sharing class AccountController {
             throw new AuraHandledException(e.getMessage());
         }
         return accountIds;
+    }
+    @AuraEnabled
+    public static list<Contact> getContactsByAccountId(String accountId){
+        List<Contact> contactList = new List<Contact>();
+        try {
+            contactList = [SELECT Id,firstname,lastname,AccountId from contact where AccountId =: accountId WITH SECURITY_ENFORCED];
+        } catch (Exception e) {
+            throw new AuraHandledException(e.getMessage());
+        }
+        return contactList;
+    }
+    public class AccountWrapper {
+        public String id {get;set;}
+        public String name{get;set;}
+        public String phone{get;set;}
+        list<ContactsWrapper> contacts{get;set;}
+    }
+     public class ContactsWrapper{
+        public String id{get;set;}
+        public String firstName{get;set;}
+        public String lastName{get;set;}
+        public String accountId{get;set;}
+    }
+    @AuraEnabled
+    public static string getAccountAndContacts(){
+        List<AccountWrapper> accountWrapperList = new List<AccountWrapper>();
+        try {
+            for(Account accounts :[Select id,name,phone,(Select id,lastname,firstname,accountId from Contacts) FROM ACCOUNT WITH SECURITY_ENFORCED LIMIT 50]){
+                List<ContactsWrapper> accountAndContactsList = new List<ContactsWrapper>();
+                AccountWrapper accountWrapper = new AccountWrapper();
+                accountWrapper.id = accounts.id;
+                accountWrapper.name = accounts.name;
+                accountWrapper.phone = accounts.phone;
+                for(contact contacts:accounts.contacts){
+                    ContactsWrapper accountAndContacts = new ContactsWrapper();
+                    accountAndContacts.id = contacts.id;
+                    accountAndContacts.firstName = contacts.firstname;
+                    accountAndContacts.lastName = contacts.lastname;
+                    accountAndContacts.accountId = contacts.accountId;
+                    accountAndContactsList.add(accountAndContacts);
+                }
+                accountWrapper.contacts = accountAndContactsList;
+                accountWrapperList.add(accountWrapper);
+            }
+        } catch (Exception e) {
+            throw new AuraHandledException(e.getMessage());
+        }
+        return JSON.serialize(accountWrapperList);
+    }
+    @AuraEnabled
+    public static String deleteAccounts(list<String> toDeleteId){
+        String status;
+        List<account> acc = new List<Account>();
+        /* Account a = new Account();
+        a.Id = toDeleteId;
+        acc.add(a); */
+        Database.DeleteResult[] drList = Database.delete(acc, false);
+        List<String> deletedIds = new List<String>();
+        List<String> errorMessages = new List<String>();
+        for(Database.DeleteResult dr : drList) {
+            if (dr.isSuccess()) {
+                deletedIds.add(dr.getId());
+            }
+            else {
+                for(Database.Error err : dr.getErrors()) {
+                    errorMessages.add(err.getMessage());
+                }
+            }
+        }
+        if(deletedIds.size() > 0){
+            status = 'success';
+        }else{
+            status = errorMessages[0];
+        }
+        return status;
     }
 }
