@@ -1,0 +1,14 @@
+<template>
+    <p>This is the new application</p>
+    <template if:true={contactList}>
+        <ul>
+            <template for:each={contactList} for:item="item">
+                <li key={item.Id}>{item.Email}</li>
+                <li key={item.Id}>{item.Name}</li>
+            </template>
+        </ul>
+    </template>
+    <template if:false={contactList}>
+        <p>No Contacts are found</p>
+    </template>
+</template>

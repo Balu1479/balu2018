@@ -62,7 +62,7 @@
             </thead>
             <tbody>
                 <template for:each ={recordsToDisplay} for:item="item">
-                <tr class="slds-hint-parent" key={item.Id} >
+                <tr class="slds-hint-parent" key={item.id} >
                     <th data-label="Name">
                         <div class="slds-truncate" data-name={item.name} title={item.name}>{item.name}</div>
                     </th>
@@ -80,8 +80,8 @@
                     </th>
                     <th data-label="Name">
                         <!--<lightning-button-icon icon-name="utility:delete" alternative-text="Delete"   class="slds-m-left_xx-small" title="Delete"></lightning-button-icon>-->
-                        <lightning-button-icon icon-name="utility:delete"    variant="bare" alternative-text="Delete"   class="slds-m-left_xx-small" title="Delete" onclick={deleteBooks} data-name={item.Id}></lightning-button-icon>
-                        <lightning-button-icon icon-name="utility:edit"    variant="bare" alternative-text="Edit"   class="slds-m-left_xx-small" title="Edit" onclick={editRecord} data-name={item.Id}></lightning-button-icon>
+                        <lightning-button-icon icon-name="utility:delete"    variant="bare" alternative-text="Delete"   class="slds-m-left_xx-small" title="Delete" onclick={deleteBooks} data-name={item.id}></lightning-button-icon>
+                        <lightning-button-icon icon-name="utility:edit"    variant="bare" alternative-text="Edit"   class="slds-m-left_xx-small" title="Edit" onclick={editRecord} data-name={item.id}></lightning-button-icon>
                     </th>   
                 </tr>
                </template>

@@ -1,34 +1,295 @@
-import { LightningElement,track,api } from 'lwc';
-
+import { LightningElement, track, api } from 'lwc';
+import getAccountNames from '@salesforce/apex/AccountController.getAccountNames';
+import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 export default class MultiSelectPickList extends LightningElement {
-    label = 'Multi Picklist Example';
-    closePill = false;
-    showDropdown = false;
-    selectedValues = [];
-    @track optionData;
-    @api options;
-    @api multiSelect = false;
-    @track searchString;
+    @api picklistInput = ["Bala", "Rajee", "Moksha", "Madhu", "Lavanya", "Meena", "Tarun"];
+    @api selectedItems = [];
+    @track allValues = [];
+    @track searchTerm = '';
+    @track valuesVal = undefined;
+    //mouse = false;
+    //showDropdown = false;
+    //focus = false;
+    //blrred = false;
+    @track selectionlimit = 5;
+    @track selectedObject = false;
+    @track itemcounts = 'None Selected';
+    @track showselectall = false;
+    @track errors;
+    searchName = '';
+    accountNames = [];
+    @track selectedAccountItems = [];
+    accountsCount = 'None Selected';
+    selectionAccountLimit = 5;
     connectedCallback(){
-        this.showDropdown = false;
-        var optionData = this.options ? (JSON.parse(JSON.stringify(this.options))) : null;
-        var values = this.selectedValues ? (JSON.parse(JSON.stringify(this.selectedValues))) : null;
-        if(values){
-            var searchString;
-            var count;
-            for(var i =0; i < optionData.length; i++){
-                if(this.multiSelect){
-                    if(values.includes(optionData[i].values)){
-                        optionData[i].selected = true;
-                        count++;
-                    }
-                }
-            }
-            if(this.multiSelect){
-                this.searchString = count + ' Option(s) Selected';
+        this.fetchAccountNames();
+    } 
+    handleSearch(event){
+        this.searchTerm = event.detail.value;
+        this.mouse = false;
+        this.showDropdown = true;
+        this.focus = false;
+        this.blurred = false;
+        if(this.selectedItems.length != 0){
+            if(this.selectedItems.length >= this.selectionlimit){
+                this.showDropdown = false;
             }
         }
-        this.values = values;
-        this.optionData = optionData;
+    }
+    get filteredResults(){
+        if(this.valuesVal == undefined){
+            this.valuesVal = this.picklistInput;
+            Object.keys(this.valuesVal).map(eachValue =>{
+                this.allValues.push({Id:eachValue, Name:this.valuesVal[eachValue]});
+            })
+            this.valuesVal = this.allValues.sort(function (a, b) { return a.Id - b.Id });
+            this.allValues = [];
+            console.log('da ', JSON.stringify(this.valuesVal));
+        }
+        console.log('allValues--:'+this.allValues);
+        console.log('valuesVal--:'+JSON.stringify(this.valuesVal));
+        if(this.valuesVal != null && this.valuesVal.length != 0){
+            if(this.valuesVal){
+                console.log('this.valuesVal ', JSON.stringify(this.valuesVal));
+                const selectedNames = this.selectedItems.map(eachName => eachName.Name);
+                //console.log('selectedNames ', JSON.stringify(selectedNames));
+                return this.valuesVal.map(profile => {
+                    //below logic is used to show check mark (✓) in dropdown checklist
+                    const isChecked = selectedNames.includes(profile.Id);
+                    return {
+                        ...profile,
+                        isChecked
+                    };
+                }).filter(profile =>
+                    profile.Id.toLowerCase().includes(this.searchTerm.toLowerCase())
+                ).slice(0, 20);
+            } else {
+                return [];
+            }
+        } 
+    }
+    handleSelection(event){
+        const selectedNameId = event.target.value;
+        const isChecked = event.target.checked;
+        if(this.selectedItems.length < this.selectionlimit){
+            if(isChecked){
+                const selectedName = this.valuesVal.find(eachName => eachName.Id === selectedNameId);
+                if(selectedName){
+                    this.selectedItems = [ ...this.selectedItems, selectedName];
+                    this.allValues.push(selectedNameId);
+                }
+            } else {
+                this.selectedItems = this.selectedItems.filter(profile => profile.Id !== selectedNameId);
+                this.allValues.splice(this.allValues.indexOf(selectedNameId), 1);
+            }
+        } else {
+            this.showToast('Toast message', 'Please Select all option', 'Info', 'dismissable');
+            /* const event = new ShowToastEvent({
+                title: 'Toast message',
+                message: 'Please Select all option',
+                variant: 'Info',
+                mode: 'dismissable'
+            });
+            this.dispatchEvent(event); */
+            //below logic is used to when user select/checks (✓) an item in dropdown picklist
+            if (isChecked) {
+                this.showDropdown = false;
+                this.errormessage();
+            } else {
+                this.selectedItems = this.selectedItems.filter(profile => profile.Id !== selectedNameId);
+                this.allValues.splice(this.allValues.indexOf(selectedNameId), 1);
+                this.errormessage();
+            }
+        }
+        this.itemcounts = this.selectedItems.length > 0 ? `${this.selectedItems.length} options selected` : 'None Selected';
+        if (this.itemcounts == 'None Selected') {
+            this.selectedObject = false;
+        } else {
+            this.selectedObject = true;
+        }
+    }
+    clickhandler(event) {
+        this.mouse = false;
+        this.showDropdown = true;
+        this.clickHandle = true;
+        this.showselectall = true;
+    }
+    //custom function used to close/open dropdown picklist
+    mousehandler(event) {
+        this.mouse = true;
+        this.dropdownclose();
+    }
+
+    //custom function used to close/open dropdown picklist
+    blurhandler(event) {
+        this.blurred = true;
+        this.dropdownclose();
+    }
+
+    //custom function used to close/open dropdown picklist
+    focuhandler(event) {
+        this.focus = true;
+    }
+
+    //custom function used to close/open dropdown picklist
+    dropdownclose() {
+        if (this.mouse == true && this.blurred == true && this.focus == true) {
+            this.searchTerm = '';
+            this.showDropdown = false;
+            this.clickHandle = false;
+        }
+    }
+
+    //this function is invoked when user deselect/remove (✓) items from dropdown picklist
+    handleRemove(event) {
+        const valueRemoved = event.target.name;
+        this.selectedItems = this.selectedItems.filter(profile => profile.Id !== valueRemoved);
+        this.allValues.splice(this.allValues.indexOf(valueRemoved), 1);
+        this.itemcounts = this.selectedItems.length > 0 ? `${this.selectedItems.length} options selected` : 'None Selected';
+        this.errormessage();
+        if (this.itemcounts == 'None Selected') {
+            this.selectedObject = false;
+        } else {
+            this.selectedObject = true;
+        }
+    }
+
+    //this function is used to deselect/uncheck (✓) all of the items in dropdown picklist
+    handleclearall(event) {
+        event.preventDefault();
+        this.showDropdown = false;
+        this.selectedItems = [];
+        this.allValues = [];
+        this.itemcounts = 'None Selected';
+        this.searchTerm = '';
+        this.selectionlimit = 10;
+        this.errormessage();
+        this.selectedObject = false;
+    }
+
+    //this function is used to select/check (✓) all of the items in dropdown picklist
+    selectall(event) {
+        event.preventDefault();
+        if (this.valuesVal == undefined) {
+            this.valuesVal = this.picklistinput;
+            //below method is used to change the input which we received from parent component
+            //we need input in array form, but if it's coming in JSON Object format, then we can use below piece of code to convert object to array
+            Object.keys(this.valuesVal).map(profile => {
+                this.allValues.push({ Id: profile, Name: this.valuesVal[profile] });
+            })
+            this.valuesVal = this.allValues.sort(function (a, b) { return a.Id - b.Id });
+            this.allValues = [];
+        }
+        this.selectedItems = this.valuesVal;
+        this.itemcounts = this.selectedItems.length + ' options selected';
+        this.selectionlimit = this.selectedItems.length + 1;
+        this.allValues = [];
+        this.valuesVal.map((value) => {
+            for (let property in value) {
+                if (property == 'Id') {
+                    this.allValues.push(`${value[property]}`);
+                }
+            }
+        });
+        console.log('value of this.allValues ', JSON.stringify(this.allValues));
+        this.errormessage();
+        this.selectedObject = true;
+    }
+    //this function is used to show the custom error message when user is trying to select picklist items more than selectionlimit passed by parent component  
+    errormessage() {
+        this.errors = {
+            "Search Objects": "Maximum of " + this.selectionlimit + " items can be selected",
+        };
+        this.template.querySelectorAll("lightning-input").forEach(item => {
+            let label = item.label;
+            if (label == 'Search Objects') {
+                // if selected items list crosses selection limit, it will through custom error
+                if (this.selectedItems.length >= this.selectionlimit) {
+                    item.setCustomValidity(this.errors[label]);
+                } else {
+                    //else part will clear the error
+                    item.setCustomValidity("");
+                }
+                item.reportValidity();
+            }
+        });
+    }
+    handleNameSearch(event){
+        this.searchName = event.target.value;
+        console.log('searchName--:',this.searchName);
+        this.showAccountDropdown = true;
+        this.mouse = false;
+        this.focus = false;
+        this.blurred = false;
+        if(this.selectedAccountItems != 0 && this.selectedAccountItems > this.selectionAccountLimit){
+            this.showAccountDropdown = true;
+        }
+    }
+    fetchAccountNames(){
+        getAccountNames().then((result) =>{
+            console.log('Account names',result);
+            this.accountNames = result;
+            console.log('Account names',this.accountNames);
+        })
+        .catch((error) =>{
+            this.error = error;
+        })
+        return this.accountNames;
+    }
+    handleAccountNameSelection(event){
+        const selctedNameId = event.target.value;
+        const isAccountNameChecked = event.target.checked;
+        if(this.selectedAccountItems.length < this.selectionAccountLimit){
+            if(isAccountNameChecked){
+                const selectedAccountNames = this.accountNames.find(accountName => accountName.Id === selctedNameId);
+                if(selectedAccountNames){
+                    this.selectedAccountItems = [...this.selectedAccountItems, selectedAccountNames];
+                    this.accountsCount = this.selectedAccountItems.length > 0 ? `${this.selectedAccountItems.length} Accounts Selected` : 'None Selected';
+                }
+            }
+        } else {
+            this.showToast('Toast message', 'Please Select all option for selecting the account names', 'Info', 'dismissable');
+        }
+        
+        this.showAccountDropdown = true;
+    }
+    handleAccountRemove(event){
+        const removeAccountName = event.target.name;
+        this.selectedAccountItems = this.selectedAccountItems.filter(accountNames => accountNames.Id !== removeAccountName);
+        this.accountsCount = this.selectedAccountItems.length > 0 ? `${this.selectedAccountItems.length} Accounts Selected` : 'None Selected';
+        if(this.accountsCount == 'None Selected'){
+            this.selectedObject = false;
+        } else {
+            this.selectedObject = true;
+        }
+    }
+    selectAccountsAll(event){
+        event.preventDefault();
+        this.selectedAccountItems = this.accountNames;
+        this.selectedObject = true;
+    }
+    handleAccountclearAll(event){
+        event.preventDefault();
+        this.selectedAccountItems = [];
+        this.accountsCount = 'None Selected';
+        this.accountNames = [];
+        this.searchName = '';
+        this.showAccountselectall = false;
+        this.selectedObject = false;
+    }
+    clickAccounthandler(){
+        //this.mouse = false;
+        this.showAccountDropdown = true;
+        this.clickAccountHandle = true;
+        this.showAccountselectall = true;
+    }
+    showToast(title, message, varient, mode){
+        const event = new ShowToastEvent({
+            title: title,
+            message: message,
+            variant: varient,
+            mode: mode
+        });
+        this.dispatchEvent(event);
     }
 }

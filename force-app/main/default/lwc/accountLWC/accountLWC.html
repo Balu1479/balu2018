@@ -2,6 +2,7 @@
     <div>
         <lightning-card title="List of Account Records">
             <lightning-button slot="actions" label="Delete" onclick={deleteRecords}></lightning-button><br />
+            <lightning-button slot="actions" label="Show Contacts" onclick={showAllContacts}></lightning-button><br />
             <table class="slds-table slds-table_cell-buffer slds-table_bordered"
                 aria-labelledby="element-with-table-label other-element-with-table-label">
                 <thead>
@@ -35,9 +36,11 @@
                             <td>{acc.Phone}</td>
                             <td>
                                 <lightning-button slot="actions" label="Click Me" onclick={handleClickMe}
-                                    data-name={index}></lightning-button>&nbsp;
+                                    data-name={index} data-id={acc.Id}></lightning-button>&nbsp;
                                 <lightning-button slot="actions" label="Update" onclick={updateRecords}
-                                    data-name={acc.Id}></lightning-button>
+                                    data-name={acc.Id}></lightning-button>&nbsp;
+                                <lightning-button slot="actions" label="Show Contacts" onclick={showContacts}
+                                    data-id={acc.Id}></lightning-button>
                             </td>
                         </tr>
                     </template>
@@ -84,5 +87,32 @@
 
     </lightning-card>-->
     <!--<c-contact-l-w-c onbtnclick ={handleEvent} item ={str}></c-contact-l-w-c>-->
+    <template if:true={isContactsAvailable}>
+        <section role="dialog" tabindex="-1" aria-modal="true" aria-labelledby="modal-heading-01"
+            class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
+                    onclick={cancil}>
+                    <svg class="slds-button__icon slds-button__icon_large" aria-hidden="true">
+                        <use xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
+                    </svg>
+                    <span class="slds-assistive-text">Cancel and close</span>
+                </button>
+                <div class="slds-modal__header">
+                    <h1 id="modal-heading-01" class="slds-modal__title slds-hyphenate">Contact Records</h1>
+                </div>
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1" if:true={contacts}>
+                    <lightning-datatable key-field="id" data={contacts} columns={columns}>
+                    </lightning-datatable>
+                </div>
+                <div class="slds-modal__footer">
+                    <button class="slds-button slds-button_neutral" aria-label="Cancel and close"
+                        onclick={cancil}>Cancel</button>
+                    <button class="slds-button slds-button_brand">Save</button>
+                </div>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+    </template>
     <c-contact-l-w-c onbtnclick={handleEvent} items={strs}></c-contact-l-w-c>
 </template>

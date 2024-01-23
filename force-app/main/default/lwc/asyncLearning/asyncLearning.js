@@ -6,7 +6,7 @@ export default class AsyncLearning extends LightningElement {
     async handleCallNormal(){
         console.log('button is clicked whose label is Call Async Child Function Normally');
         let contact = await this.template.querySelector('c-child-async').handleParentCall();
-        console.log('button click is finishing now & single contact is', contact);
+        console.log('button click is finishing now & single contact is', JSON.stringify(contact));
 
     }
     handleCallfromCallback(){

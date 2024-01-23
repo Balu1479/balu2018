@@ -3,10 +3,9 @@ trigger AccountTrigger on Account (before insert,before update,after insert) {
         AccountController.insertTriggerRecs(trigger.new);
     }
     if(trigger.isBefore && trigger.isUpdate){
-        AccountController.UpdateTriggerRecs(trigger.new);
+        AccountController.updateTriggerRecs(trigger.new);
     }
     if(trigger.isAfter && trigger.isInsert){
         AccountController.upsertcontactRecords(trigger.new);
     }
-    
 }

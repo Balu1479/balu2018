@@ -1,10 +1,115 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomLabels xmlns="http://soap.sforce.com/2006/04/metadata">
     <labels>
+        <fullName>AccountAndContacts</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>AccountAndContacts</shortDescription>
+        <value>List of Account Records and It&apos;s Contact Records</value>
+    </labels>
+    <labels>
+        <fullName>Cancel</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Cancel</shortDescription>
+        <value>Cancel</value>
+    </labels>
+    <labels>
+        <fullName>Close</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Close</shortDescription>
+        <value>Close</value>
+    </labels>
+    <labels>
+        <fullName>Delete</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Delete</shortDescription>
+        <value>Delete</value>
+    </labels>
+    <labels>
+        <fullName>Download</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Download</shortDescription>
+        <value>Download</value>
+    </labels>
+    <labels>
+        <fullName>ListofAccountRecords</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ListofAccountRecords</shortDescription>
+        <value>List of Account Records</value>
+    </labels>
+    <labels>
+        <fullName>PrerequisiteServices</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Prerequisite Services</shortDescription>
+        <value>Prerequisite Services</value>
+    </labels>
+    <labels>
+        <fullName>PrerequisiteServicesTable</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Prerequisite Services With Table</shortDescription>
+        <value>Prerequisite Services With Table</value>
+    </labels>
+    <labels>
+        <fullName>Save</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Save</shortDescription>
+        <value>Save</value>
+    </labels>
+    <labels>
         <fullName>Science</fullName>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Science</shortDescription>
         <value>Science Marks</value>
+    </labels>
+    <labels>
+        <fullName>ServiceCatelogRecords</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>List Of Service Catelog Records</shortDescription>
+        <value>List Of Service Catelog Records</value>
+    </labels>
+    <labels>
+        <fullName>ShowContacts</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Show Contacts</shortDescription>
+        <value>Show Contacts</value>
+    </labels>
+    <labels>
+        <fullName>ShowDeatails</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ShowDeatails</shortDescription>
+        <value>Show Deatails</value>
+    </labels>
+    <labels>
+        <fullName>ShowMultipleContacts</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ShowMultipleContacts</shortDescription>
+        <value>Show Multiple Contacts</value>
+    </labels>
+    <labels>
+        <fullName>ShowServiceDetails</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Show Service Details</shortDescription>
+        <value>Show Service Details</value>
+    </labels>
+    <labels>
+        <fullName>DCEAccessToTheSoftwareDashboard</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>DCEAccessToTheSoftwareDashboard</shortDescription>
+        <value>Access to the Software Dashboard requires an HPE Support Service Agreement.</value>
     </labels>
 </CustomLabels>

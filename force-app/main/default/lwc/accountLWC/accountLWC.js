@@ -3,8 +3,14 @@ import { NavigationMixin } from 'lightning/navigation';
 import getAccountsRecords from '@salesforce/apex/AccountController.getAccountsRecords';
 import uppdateAccountRecords from '@salesforce/apex/AccountController.uppdateAccountRecords';
 import deleteMultipleAccRecords from '@salesforce/apex/AccountController.deleteMultipleAccRecords';
+import getContactsByAccountId from '@salesforce/apex/AccountController.getContactsByAccountId';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
+const columns = [
+    { label: 'First Name', fieldName: 'FirstName' },
+    { label: 'Last Name', fieldName: 'LastName' },
+];
 export default class AccountLWC extends NavigationMixin(LightningElement) {
+  columns = columns;
     @track firstNumber;
     @track secondNumber;
     @track result;
@@ -23,6 +29,10 @@ export default class AccountLWC extends NavigationMixin(LightningElement) {
     finalName;
     @track accounts = [];
     error;
+  @track contacts = [];
+  accId;
+  isContactsAvailable = false;
+  @track selectedAccountId = [];
     connectedCallback() {
         this.fetchAccountrecords();
         //console.log('size--:'+this.accounts.length);
@@ -114,7 +124,7 @@ export default class AccountLWC extends NavigationMixin(LightningElement) {
         getAccountsRecords()
             .then((result) => {
                 //console.log('size--:'+result.length());
-                console.log('result--:' + result);
+                //console.log('result--:' + result);
                 this.accounts = JSON.parse(result);
                 //this.accounts = [ ...result];
                 console.log('size--:' + this.accounts.length);
@@ -127,8 +137,9 @@ export default class AccountLWC extends NavigationMixin(LightningElement) {
     }
 
     handleClickMe(event) {
-        let index = event.target.dataset.name;
-        alert(JSON.stringify(this.accounts[index].Name + '' + this.accounts[index].Industry));
+      this.accountId = event.target.dataset.id;
+        console.log('id--:', this.accountId);
+        //alert(JSON.stringify(this.accounts[index].Name + '' + this.accounts[index].Industry));
 
     }
     updateRecords(event) {
@@ -192,5 +203,50 @@ export default class AccountLWC extends NavigationMixin(LightningElement) {
 
             })
     }
+  showAllContacts() {
+    this.isContactsAvailable = true;
+      let rowSelected = this.template.querySelectorAll('lightning-input');
+      console.log('row selected--',rowSelected)
+      for(let i = 0; i < rowSelected.length; i++) {
+          if(rowSelected[i].checked && rowSelected[i].type === 'checkbox') {
+            this.selectedAccountId.push({ Id:rowSelected[i].dataset.id });
+          }
+      } 
+    if (rowSelected.checked && rowSelected.type === 'checkbox') { 
+      console.log('selected--',rowSelected.dataset.id)
+      let selectedAccount = rowSelected.dataset.id;
+    }
+    console.log('contacts',JSON.stringify(this.contacts));
+    console.log('row selected--',this.selectedAccountId[0].Id)
+    getContactsByAccountId({ accountId: this.selectedAccountId[0].Id })
+      .then((result) => {
+        this.contacts = result;
+        //console.log('contacts',JSON.stringify(this.contacts));
+        this.error = undefined;
+        this.isContactsAvailable = true;
+      })
+      .catch((error) => {
+        this.error = error;
+        this.contacts = undefined;
+      }) 
+  }
+  showContacts(event) {
+    this.accId = event.target.dataset.id;
+        console.log('id--:', this.accId);
+    getContactsByAccountId({ accountId: this.accId })
+      .then((result) => {
+        this.contacts = result;
+        console.log('contacts',JSON.stringify(this.contacts));
+        this.error = undefined;
+        this.isContactsAvailable = true;
+      })
+      .catch((error) => {
+        this.error = error;
+        this.contacts = undefined;
+      })
+  }
+  cancil() {
+    this.isContactsAvailable = false;
+  }
 
 }

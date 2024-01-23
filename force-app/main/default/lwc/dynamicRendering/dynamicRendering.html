@@ -1,0 +1,103 @@
+<template>
+    <lightning-card title={label.ListofAccountRecords} style="color:rgb(0, 0, 0)">
+        <div>
+            <div lwc:if={isCitiesAvailable}>
+                <lightning-input class="slds-p-left_xx-large" type="checkbox" data-id="checkbox" label="Cities"
+                    onchange={handleCityChange}></lightning-input>
+                <div lwc:if={isCitiesNamesAvailable} class="slds-scrollable" style="height:5rem;width:15rem"
+                    tabindex="0">
+                    <lightning-input class="slds-p-left_xx-large" type="checkbox" data-id="checkbox"
+                        label='Select All Cities' onchange={handleAllCities}></lightning-input>
+                    <div for:each={cityNames} for:item="item" key={id}>
+                        <lightning-input class="slds-p-left_xx-large" type="checkbox" data-id="checkbox1" label={item}
+                            data-name={item}></lightning-input>
+                        <!-- <lightning-input class="slds-p-left_xx-large" type="checkbox" data-id="checkbox1" label={item}
+                            data-name={item} onchange={handleCityNameChange}></lightning-input> -->
+                    </div>
+                </div>
+                <!-- <div lwc:else>
+                    <p>Sites are not available</p>
+                </div> -->
+                <lightning-input class="slds-p-left_xx-large" type="checkbox" data-id="checkbox" label="Industries"
+                    onchange={handleIndustryChange}></lightning-input>
+                <div lwc:if={isIndustiesAvailable} class="slds-scrollable" style="height:5rem;width:15rem" tabindex="0">
+                    <lightning-input class="slds-p-left_xx-large" type="checkbox" data-id="checkbox"
+                        label='Select All Industries' onchange={handleIndustryAll}></lightning-input>
+                    <div for:each={industries} for:item="item" key={id}>
+                        <lightning-input class="slds-p-left_xx-large" type="checkbox" data-id="checkbox2" label={item}
+                            data-name={item} onchange={handleEachIndustryChange}></lightning-input>
+                    </div>
+                </div>
+                <!-- <div lwc:else>
+                    <p>Industries are not available</p>
+                </div> -->
+                <!-- <lightning-input class="slds-p-left_xx-large" type="checkbox" data-id="checkbox"
+                    label="Japan"></lightning-input> -->
+            </div>
+            <div lwc:else>
+                <p>Sites are not available</p>
+            </div>
+            <div class="slds-clearfix slds-float_right">
+                <div class="slds-m-bottom_large">
+                    <lightning-button slot="actions" label="Show Multiple Site Accounts" variant='brand'
+                        onclick={showMultipleSiteAccounts}></lightning-button>&nbsp;&nbsp;
+                    <lightning-button slot="actions" label="Empty Industry Accounts" variant='brand'
+                        onclick={emptyIndustryAccounts}></lightning-button>&nbsp;&nbsp;
+                    <lightning-button slot="actions" label="Not Empty Industry Accounts" variant='brand'
+                        onclick={notEmptyIndustryAccounts}></lightning-button>&nbsp;&nbsp;
+                    <lightning-button slot="actions" label="Show All Accounts" variant='brand'
+                        onclick={fetchAccountRecords}></lightning-button>&nbsp;&nbsp;
+                    <lightning-button slot="actions" label="Without Agriculture Accounts" variant='brand'
+                        onclick={showAccounts} class="slds-m-right_small"></lightning-button>
+                </div>
+            </div>
+        </div>
+        &nbsp;&nbsp;&nbsp;
+        <table class="slds-table slds-table_cell-buffer slds-table_bordered"
+            aria-labelledby="element-with-table-label other-element-with-table-label">
+            <thead>
+                <tr>
+                    <th><lightning-input type="checkbox"></lightning-input></th>
+                    <!-- <th scope="col">
+                        <div class="slds-truncate" title="S.No">S.No</div>
+                    </th> -->
+                    <th scope="col" class="blue">
+                        <div class="slds-truncate" title="Name">Name</div>
+                    </th>
+                    <th scope="col" class="blue">
+                        <div class="slds-truncate" title="Industry">Industry</div>
+                    </th>
+                    <th scope="col" class="blue">
+                        <div class="slds-truncate" title="Phone">Phone</div>
+                    </th>
+                    <th scope="col" class="blue">
+                        <div class="slds-truncate" title="Account Site">Account Site</div>
+                    </th>
+                    <th scope="col" class="blue">
+                        <div class="slds-truncate" title="Is Active">Is Active</div>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <template for:each={accountsForDynamic} for:item="acc" for:index="index">
+                    <tr key={acc.Id}>
+                        <td><lightning-input type="checkbox" value={acc.Name} data-id={acc.Id}
+                                onchange={selectedAccounts}></lightning-input></td>
+                        <!-- <td>{index}</td> -->
+                        <td class="slds-cell-wrap">{acc.Name}</td>
+                        <td class="slds-cell-wrap">{acc.Industry}</td>
+                        <td class="slds-cell-wrap">{acc.Phone}</td>
+                        <td class="slds-cell-wrap">{acc.Site}</td>
+                        <td style="color:green" class="slds-cell-wrap">{acc.Is_Active__c}</td>
+                        <!-- <template if:true={isFalse} key={acc.id}>
+                            <td style="color:red">{acc.Is_Active__c}</td>
+                        </template> -->
+                    </tr>
+                </template>
+                <template if:true={error}>
+                    {error}
+                </template>
+            </tbody>
+        </table>
+    </lightning-card>
+</template>

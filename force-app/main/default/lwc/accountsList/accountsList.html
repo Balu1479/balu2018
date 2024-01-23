@@ -1,0 +1,8 @@
+<template>
+    <lightning-button label="Show Account Records" onclick={showAccounts} variant="brand"></lightning-button>
+    <ul>
+        <template for:each={accountList} for:item="item">
+            <li key={item.Id}>{item.Name}</li>
+        </template>
+    </ul>
+</template>

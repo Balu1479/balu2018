@@ -57,8 +57,8 @@ export default class ParentComponent extends LightningElement {
     this.searchValue = event.target.value;
   }
   handleSearch() {
-    //this.searchValue = event.detail.value;
-    //this.searchValue = 'search';
+    this.parentMessage = this.searchValue;
+    console.log('parentMessage--:',this.parentMessage);
     console.log("search value", this.searchValue);
     this.template
       .querySelector("c-child-component")
