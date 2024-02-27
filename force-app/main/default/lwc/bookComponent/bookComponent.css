@@ -1,0 +1,57 @@
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: -webkit-linear-gradient(
+    350deg,
+    rgb(14, 15, 15) 0%,
+    rgb(14, 15, 15) 80%
+  );
+}
+.card-text {
+  grid-area: text;
+}
+.slds-grid.justify-center {
+  justify-content: center;
+}
+.card {
+  display: grid;
+  grid-template-columns: 300px;
+  grid-template-rows: 100px 60px 50px 50px;
+  grid-template-areas: "image" "text" "stats";
+
+  border-radius: 18px;
+  background: rgb(231, 246, 152);
+  box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.9);
+  font-family: roboto;
+  text-align: center;
+
+  transition: 0.5s ease;
+  margin: 30px;
+}
+.card:hover {
+  transform: scale(1.15);
+  box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.6);
+}
+.card-name {
+  color: green;
+  font-size: xx-large;
+  font-style: oblique;
+}
+.card-category {
+  color: rgb(0, 77, 128);
+  font-size: x-large;
+}
+.card-price {
+  color: red;
+  font-size: xxx-large;
+}
+.card-count {
+  color: rgb(246, 1, 99);
+  font-size: x-large;
+}
+.card-publishtype {
+  color: green;
+  font-size: x-large;
+  font-stretch: semi-condensed;
+}

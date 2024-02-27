@@ -64,4 +64,7 @@ export default class ParentComponent extends LightningElement {
       .querySelector("c-child-component")
       .childHandleSearch(this.searchValue);
   }
+  testChildButton() {
+    this.template.querySelector("c-child-component").childMethod();
+  }
 }

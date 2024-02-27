@@ -1,0 +1,15 @@
+<template>
+    <div class="child2-section">
+        <p>Child Two</p>
+        <template for:each={accordionList} for:item="list">
+            <div key={list.id}>
+                <button class={list.className} style={accordianStyle}>{list.name}</button>
+                <template if:true={list.selected}>
+                    <div class="panel">
+                        <p class={textStyle}><b>This is the accordian text for multiple buttons</b></p>
+                    </div>
+                </template>
+            </div>
+        </template>
+    </div>
+</template>

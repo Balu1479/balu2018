@@ -4,6 +4,9 @@ import { LightningElement } from 'lwc';
 import DCEAccessToTheSoftwareDashboard from '@salesforce/label/c.DCEAccessToTheSoftwareDashboard';
 
 export default class LifeCycleHooks extends LightningElement {
+    header = 'Software Dashboard';
+    description = 'Access to the Software Dashboard requires an HPE Support Service Agreement.';
+    disabledTooltip = false;
     label = {
         DCEAccessToTheSoftwareDashboard
     };
@@ -23,4 +26,7 @@ export default class LifeCycleHooks extends LightningElement {
         console.log('I am in render callback',this.showTemplatePrimary ? studentPrimary : htmlPractice);
         return this.showTemplatePrimary ? studentPrimary : htmlPractice;
     } */
+    get tooltipText() {
+        return 'Access to the Software Dashboard requires an HPE Support Service Agreement.'
+    }
 }

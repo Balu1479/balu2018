@@ -1,14 +1,17 @@
 <template>
-    <lightning-card title="Simple Calculator">
-        <P>Account Ids : {accountIds}</P>
-        <div class="slds-size_1-of-3">
-            <lightning-input label="First Number" value={firstNumber} onchange={handleChange} required=""></lightning-input>
-            <lightning-input label="Second Number" value={secondNumber} onchange={handleChange} required=""></lightning-input>
-        </div><br/>
-        <div if:true={result}>
-            <p><b>Result : {result}</b></p>
-        </div><br/>
-        <div>
+    <!-- <P>Account Ids : {accountIds}</P> slds-size_1-of-3-->
+    <div class="card">
+        <p class="slds-align_absolute-center header"><b>Calculator</b></p>
+        <div class="slds-align_absolute-center fields" style="height:5rem">
+            <lightning-input label="First Number" value={firstNumber} onchange={handleChange}
+                required=""></lightning-input>&nbsp;&nbsp;
+            <lightning-input label="Second Number" value={secondNumber} onchange={handleChange}
+                required=""></lightning-input>
+        </div>
+        <div class="add slds-align_absolute-center">
+            <p class="result"><b>Result : {result}</b></p>&nbsp;&nbsp;&nbsp;
+        </div>
+        <div class="add slds-align_absolute-center">
             <lightning-button-group>
                 <div>
                     <lightning-button label="Add" variant="brand" onclick={add}></lightning-button>&nbsp;
@@ -20,9 +23,13 @@
                     <lightning-button label="Multiply" variant="brand" onclick={multiply}></lightning-button>&nbsp;
                 </div>
                 <div>
-                    <lightning-button label="Division" variant="brand" onclick={division}></lightning-button>
+                    <lightning-button label="Division" variant="brand" onclick={division}></lightning-button>&nbsp;
+                </div>
+                <div>
+                    <lightning-button label="Clear" variant="destructive" onclick={clear}
+                        disabled={isClearall}></lightning-button>
                 </div>
             </lightning-button-group>
         </div>
-    </lightning-card>
+    </div>
 </template>

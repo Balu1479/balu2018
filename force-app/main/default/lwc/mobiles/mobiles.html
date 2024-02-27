@@ -1,0 +1,55 @@
+<template>
+    <c-sorting></c-sorting>
+    <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_striped">
+        <thead>
+            <tr class="slds-line-height_reset">
+                <th>
+
+                </th>
+                <th class="" scope="col" style="color:darkgrey">
+                    <a class="slds-text-link_reset" role="button" tabindex="0" onclick={sortRecs} name="Name"
+                        style="color:#0059ff">
+                        Mobile Name
+                        <lightning-icon icon-name="utility:arrowup" size="xx-small" if:true={fieldUpBool}
+                            style="color:blue"></lightning-icon>
+                        <lightning-icon icon-name="utility:arrowdown" size="xx-small" if:true={fieldDWBool}
+                            style="color:blue"></lightning-icon>
+                    </a>
+                </th>
+                <th class="" scope="col" style="color:darkgrey">
+                    <a class="slds-text-link_reset" href="javascript:void(0);" role="button" tabindex="0"
+                        onclick={sortRecs} name="Mobile_Price__c" style="color:#0059ff">
+                        Mobile Price
+                        <lightning-icon icon-name="utility:arrowup" size="xx-small" if:true={fieldUpBool}
+                            class="blue"></lightning-icon>
+                        <lightning-icon icon-name="utility:arrowdown" size="xx-small" if:true={fieldDWBool}
+                            class="blue"></lightning-icon>
+                    </a>
+                </th>
+                <th class="" scope="col" style="color:darkgrey">
+                    <a class="slds-text-link_reset" href="javascript:void(0);" role="button" tabindex="0"
+                        onclick={sortRecs} name="Mobile_Rank__c" style="color:#0059ff">
+                        Mobile Rank
+                        <lightning-icon icon-name="utility:arrowup" size="xx-small" if:true={fieldUpBool}
+                            class="blue"></lightning-icon>
+                        <lightning-icon icon-name="utility:arrowdown" size="xx-small" if:true={fieldDWBool}
+                            class="blue"></lightning-icon>
+                    </a>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <template for:each={allMobiles} for:item="item">
+                <tr key={item.id}>
+                    <td>
+                        <lightning-input type="checkbox" data-id={item.Id}></lightning-input>
+                    </td>
+                    <td>{item.Name}</td>
+                    <td>{item.Mobile_Price__c}</td>
+                    <td>{item.Mobile_Rank__c}</td>
+                </tr>
+            </template>
+        </tbody>
+    </table>
+
+</template>
