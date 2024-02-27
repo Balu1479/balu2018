@@ -1,8 +1,8 @@
 import { LightningElement, api } from "lwc";
 
 export default class ChildComponent extends LightningElement {
-  @api message;
-  @api childSearchValue;
+  message;
+  childSearchValue;
   constructor() {
     super();
     console.log("I am fron child component consructor");
@@ -28,5 +28,9 @@ export default class ChildComponent extends LightningElement {
   childHandleSearch(searchValue) {
     console.log("search Value", searchValue);
     this.childSearchValue = searchValue;
+  }
+  @api childMethod() {
+    console.log("Calling the child method");
+    console.log("Calling the child method", "Bala Gongolla");
   }
 }

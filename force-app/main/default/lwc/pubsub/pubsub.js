@@ -1,37 +1,37 @@
-var callbacks = {};
-    const register = (eventName , callback) =>{
-        console.log('callback register--:',callback);
-        console.log('eventName register--:',eventName);
-        if(!callbacks[eventName]){
-            callbacks[eventName] = new Set();
-        }
-        callbacks[eventName].add(callback);
-    };
-    const unregister = (eventName , callback) =>{
-        if(callbacks[eventName]){
-            callbacks[eventName].delete(callback);
-        }
-    };
-    const unregisterAll = () =>{
-        callbacks = {};
-    };
-    const fire = (eventName , payload) =>{
-        console.log('payload fire--:',payload);
-        console.log('eventName fire--:',eventName);
-        if(callbacks[eventName]){
-            callbacks[eventName].forEach(callback => {
-                console.log(' fire--:',callback);
-                try {
-                    callback(payload);
-                }catch (error){
-                    //fail silently
-                }
-            });
-        }
-    };
-    export default{
-        register,
-        unregister,
-        fire,
-        unregisterAll
-    };
+// step 1. Create a store
+
+const store = {};
+
+//step 2 . Create susbcribe method
+
+const subscribe = (eventName, callback) => {
+  if (!store[eventName]) {
+    store[eventName] = new Set();
+  }
+  store[eventName].add(callback);
+};
+
+// step 3 Create Publish method
+const publish = (eventName, payload) => {
+  if (store[eventName]) {
+    store[eventName].forEach((callback) => {
+      try {
+        callback(payload);
+      } catch (error) {
+        console.error(error);
+      }
+    });
+  }
+};
+
+// step 4 Create unsubscribe method
+const unsubscribe = (eventName, callback) => {
+  if (store[eventName]) {
+    store[eventName].delete(callback);
+  }
+};
+export default {
+  subscribe,
+  unsubscribe,
+  publish
+};

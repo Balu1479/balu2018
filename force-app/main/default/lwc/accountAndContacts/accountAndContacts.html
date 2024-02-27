@@ -5,72 +5,79 @@
                 <div class="slds-float_right">
                     <!-- <lightning-button slot="actions" label="Map Details" variant="brand"
                         onclick={mapDetails}></lightning-button>&nbsp;&nbsp; -->
-                    <!-- <lightning-button slot="actions" label="Create" variant="brand"
-                        onclick={craeteAccountRecord}></lightning-button>&nbsp;&nbsp; -->
-                    <lightning-button slot="actions" label={label.ShowDeatails} variant="brand"
-                        onclick={showDeatails}></lightning-button>&nbsp;&nbsp;
+                    <lightning-button slot="actions" label="Create By Form" variant="brand"
+                        onclick={craeteAccountRecordByForm}></lightning-button>&nbsp;&nbsp;
+                    <lightning-button slot="actions" label="Create Account" variant="brand"
+                        onclick={openAccountForm}></lightning-button>&nbsp;&nbsp;
+                    <lightning-button slot="actions" label={label.Update} variant="brand"
+                        onclick={openAccountToUpdate}></lightning-button>&nbsp;&nbsp;
                     <lightning-button slot="actions" label={label.Delete} variant="brand"
                         onclick={deleteRecords}></lightning-button>&nbsp;&nbsp;
                     <lightning-button slot="actions" label={label.ShowMultipleContacts} variant="brand"
                         onclick={showAllContacts}></lightning-button>&nbsp;&nbsp;
+                    <lightning-button slot="actions" label='Delete Single Record' variant="brand"
+                        onclick={deleteSingleRecord}></lightning-button>&nbsp;
                 </div>
-            </div>
-            <table class="slds-table slds-table_cell-buffer slds-table_bordered"
-                aria-labelledby="element-with-table-label other-element-with-table-label">
-                <thead>
-                    <tr>
-                        <th><lightning-input onchange={allSelected} type="checkbox"></lightning-input></th>
-                        <th class="" scope="col" style="color:darkgrey">
-                            <a class="slds-text-link_reset" role="button" tabindex="0" onclick={sortRecs} name="S.No"
-                                style="color:#0059ff">
-                                S.No
-                                <lightning-icon icon-name="utility:arrowup" size="xx-small" if:true={snoUpBool}
-                                    style="color:blue"></lightning-icon>
-                                <lightning-icon icon-name="utility:arrowdown" size="xx-small" if:true={snoDWBool}
-                                    style="color:blue"></lightning-icon>
-                            </a>
-                        </th>
-                        <th class="" scope="col" style="color:darkgrey">
-                            <a class="slds-text-link_reset" role="button" tabindex="0" onclick={sortRecs} name="Name"
-                                style="color:#0059ff">
-                                Name
-                                <lightning-icon icon-name="utility:arrowup" size="xx-small" if:true={nameUpBool}
-                                    style="color:blue"></lightning-icon>
-                                <lightning-icon icon-name="utility:arrowdown" size="xx-small" if:true={nameDWBool}
-                                    style="color:blue"></lightning-icon>
-                            </a>
-                        </th>
-                        <th class="" scope="col" style="color:darkgrey">
-                            <a class="slds-text-link_reset" role="button" tabindex="0" onclick={sortRecs} name="Phone"
-                                style="color:#0059ff">
-                                Phone
-                                <lightning-icon icon-name="utility:arrowup" size="xx-small" if:true={phoneUpBool}
-                                    style="color:blue"></lightning-icon>
-                                <lightning-icon icon-name="utility:arrowdown" size="xx-small" if:true={phoneDWBool}
-                                    style="color:blue"></lightning-icon>
-                            </a>
-                        </th>
-                        <th scope="col">
-                            <div class="slds-truncate" title="Action">Action</div>
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <template for:each={accounts} for:item="item" for:index="index">
-                        <tr key={item.id}>
-                            <td><lightning-input type="checkbox" value={item.name} data-id={item.id}></lightning-input>
-                            </td>
-                            <td>{index}</td>
-                            <td class="slds-cell-wrap">{item.name}</td>
-                            <td>{item.phone}</td>
-                            <td>
-                                <lightning-button slot="actions" label={label.ShowContacts} onclick={showContacts}
-                                    data-id={item.id}></lightning-button>
-                            </td>
+            </div>&nbsp;&nbsp;
+            <div style="height: 300px;">
+                <table class="slds-table slds-table_cell-buffer slds-table_bordered"
+                    aria-labelledby="element-with-table-label other-element-with-table-label">
+                    <thead>
+                        <tr>
+                            <th><lightning-input onchange={allSelected} type="checkbox"></lightning-input></th>
+                            <th class="" scope="col" style="color:darkgrey">
+                                <a class="slds-text-link_reset" role="button" tabindex="0" onclick={sortRecs}
+                                    name="S.No" style="color:#0059ff">
+                                    S.No
+                                    <lightning-icon icon-name="utility:arrowup" size="xx-small" if:true={snoUpBool}
+                                        style="color:blue"></lightning-icon>
+                                    <lightning-icon icon-name="utility:arrowdown" size="xx-small" if:true={snoDWBool}
+                                        style="color:blue"></lightning-icon>
+                                </a>
+                            </th>
+                            <th class="" scope="col" style="color:darkgrey">
+                                <a class="slds-text-link_reset" role="button" tabindex="0" onclick={sortRecs}
+                                    name="Name" style="color:#0059ff">
+                                    Name
+                                    <lightning-icon icon-name="utility:arrowup" size="xx-small" if:true={nameUpBool}
+                                        style="color:blue"></lightning-icon>
+                                    <lightning-icon icon-name="utility:arrowdown" size="xx-small" if:true={nameDWBool}
+                                        style="color:blue"></lightning-icon>
+                                </a>
+                            </th>
+                            <th class="" scope="col" style="color:darkgrey">
+                                <a class="slds-text-link_reset" role="button" tabindex="0" onclick={sortRecs}
+                                    name="Phone" style="color:#0059ff">
+                                    Phone
+                                    <lightning-icon icon-name="utility:arrowup" size="xx-small" if:true={phoneUpBool}
+                                        style="color:blue"></lightning-icon>
+                                    <lightning-icon icon-name="utility:arrowdown" size="xx-small" if:true={phoneDWBool}
+                                        style="color:blue"></lightning-icon>
+                                </a>
+                            </th>
+                            <th scope="col">
+                                <div class="slds-truncate" title="Action" style="color:#0059ff">Action</div>
+                            </th>
                         </tr>
-                    </template>
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        <template for:each={accountRecordsToDisplay} for:item="item" for:index="index">
+                            <tr key={item.id}>
+                                <td><lightning-input type="checkbox" value={item.name}
+                                        data-id={item.id}></lightning-input>
+                                </td>
+                                <td>{index}</td>
+                                <td class="slds-cell-wrap">{item.name}</td>
+                                <td>{item.phone}</td>
+                                <td>
+                                    <lightning-button slot="actions" label={label.ShowContacts} onclick={showContacts}
+                                        data-id={item.id}></lightning-button>
+                                </td>
+                            </tr>
+                        </template>
+                    </tbody>
+                </table>
+            </div>
         </lightning-card>
     </div><br />
     <template if:true={isContactsAvailable}>
@@ -102,12 +109,12 @@
         </section>
         <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
     </template>
-    <!-- <template if:true={isShowModal}>
+    <template if:true={isAccountModal}>
         <section role="dialog" tabindex="-1" aria-modal="true" aria-labelledby="modal-heading-01"
             class="slds-modal slds-fade-in-open">
             <div class="slds-modal__container">
                 <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
-                    onclick={cancil}>
+                    onclick={cancel}>
                     <svg class="slds-button__icon slds-button__icon_large" aria-hidden="true">
                         <use xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
                     </svg>
@@ -124,5 +131,62 @@
             </div>
         </section>
         <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
-    </template> -->
+    </template>
+    <template if:true={isAccountCreate}>
+        <section role="dialog" tabindex="-1" aria-modal="true" aria-labelledby="modal-heading-01"
+            class="slds-modal slds-fade-in-open slds-modal_medium">
+            <div class="slds-modal__container">
+                <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
+                    onclick={cancel}>
+                    <svg class="slds-button__icon slds-button__icon_large" aria-hidden="true">
+                        <use xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
+                    </svg>
+                    <span class="slds-assistive-text">Cancel and close</span>
+                </button>
+                <div class="slds-modal__header">
+                    <h1 id="modal-heading-0" class="slds-modal__title slds-hyphenate">Create Account Record</h1>
+                </div>
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-10">
+                    <lightning-input label="Name" value={accObj.name} onchange={handleChange}></lightning-input>
+                </div>
+                <div class="slds-modal__footer">
+                    <button class="slds-button slds-button_neutral" aria-label="Cancel and close"
+                        onclick={cancel}>Cancel</button>
+                    <button class="slds-button slds-button_brand" onclick={craeteAccountRecord}>Create</button>
+                </div>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+    </template>
+    <template if:true={isAccountUpdate}>
+        <section role="dialog" tabindex="-1" aria-modal="true" aria-labelledby="modal-heading-01"
+            class="slds-modal slds-fade-in-open slds-modal_medium">
+            <div class="slds-modal__container">
+                <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
+                    onclick={cancel}>
+                    <svg class="slds-button__icon slds-button__icon_large" aria-hidden="true">
+                        <use xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
+                    </svg>
+                    <span class="slds-assistive-text">Cancel and close</span>
+                </button>
+                <div class="slds-modal__header">
+                    <h1 id="modal-heading" class="slds-modal__title slds-hyphenate">Update Account Record</h1>
+                </div>
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-9">
+                    <lightning-input label="Name" value={nameToUpdate} onchange={handleUpdateChange}></lightning-input>
+                </div>
+                <div class="slds-modal__footer">
+                    <button class="slds-button slds-button_neutral" aria-label="Cancel and close"
+                        onclick={cancel}>Cancel</button>
+                    <button class="slds-button slds-button_brand" onclick={updateAccountRecord}>Update</button>
+                </div>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+    </template>
+    <c-page-navigation totalrecords={totalrecords} onnextpage={nextPage} totalpages={totalpages} pagenumber={pageNumber}
+        onfirstpage={firstPage} onpreviouspage={previousPage} onlastpage={lastPage}
+        disable-first-button={disableFirstButton} disable-last-button={disableLastButton}
+        disable-next-button={disableNextButton} disable-previous-button={disablePreviousButton}>
+    </c-page-navigation>
 </template>

@@ -1,0 +1,12 @@
+<template>
+    <template if:true={disabledTooltip}>
+        <div style="width: 50px;">
+            <c-tool-tip tooltip-text={tooltipText} tooltip-styles={tooltipStyles}>
+            </c-tool-tip>
+        </div>
+    </template>
+    <div style="width: 300px;">
+        <h1><b>{labelOfHeader}</b></h1>&nbsp;
+        <div>{descriptionValue}</div>
+    </div>
+</template>

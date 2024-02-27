@@ -1,9 +1,12 @@
 <template>
+    <c-sorting></c-sorting>&nbsp;&nbsp;
     <div>
+        <lightning-button label="Test Child Button" onclick={testChildButton} variant="brand"></lightning-button>&nbsp;
         <lightning-button label="Sort the Fruits" onclick={sortingFruits} variant="brand"></lightning-button>&nbsp;
         <lightning-button label="Sort the Students" onclick={sortingStudents} variant="brand"></lightning-button>&nbsp;
         <lightning-button label="Sort the Students By marks" onclick={sortingStudentsByMarks}
-            variant="brand"></lightning-button>
+            variant="brand"></lightning-button>&nbsp;
+        <lightning-button label="Child Method" onclick={childMethod} variant="brand"></lightning-button>
     </div>&nbsp;&nbsp;
     <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_striped">
         <thead>
@@ -35,12 +38,12 @@
         </thead>
         <tbody>
             <template for:each={studentsRecords} for:item="item">
-                <tr key={item.id}>
+                <tr class={rowtextColor} key={item.id}>
                     <td>
                         <lightning-input type="checkbox" data-id={item.Id}></lightning-input>
                     </td>
-                    <td>{item.Name}</td>
-                    <td>{item.Total_Marks__c}</td>
+                    <td class={item.rowColor}>{item.Name}</td>
+                    <td class={item.rowColor}>{item.Total_Marks__c}</td>
                 </tr>
             </template>
         </tbody>

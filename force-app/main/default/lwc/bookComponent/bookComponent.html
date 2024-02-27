@@ -1,0 +1,15 @@
+<template>
+    <div class="container">
+        <div class="slds-grid slds-gutters slds-wrap">
+            <template for:each={bookRecords} for:item="item">
+                <div key={item.id} class="card">
+                    <div class="card-name">Author - {item.name}</div>
+                    <div class="card-category">Book Category : {item.category}</div>
+                    <div class="card-price">Rs-{item.price}/-</div>
+                    <div class="card-count">Total Books Available: {item.count}</div>
+                    <div class="card-publishtype">Publisher : {item.publishtype}</div>
+                </div>
+            </template>
+        </div>
+    </div>
+</template>

@@ -1,6 +1,7 @@
 <template>
     <lightning-card>
         <div>
+            <lightning-button label="Test Child Button" onclick={testChildButton} variant="brand"></lightning-button>
             <lightning-input label="Search" value={searchValue} onchange={handleSearchChange}
                 style="width: 400px;"></lightning-input>
             <lightning-button label="Search" onclick={handleSearch}></lightning-button>

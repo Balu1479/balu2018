@@ -1,0 +1,22 @@
+.add {
+  padding-bottom: 10px;
+  padding-top: 10px;
+  padding-left: 20px;
+  padding-right: 10px;
+}
+.fields {
+  padding-left: 20px;
+}
+.result {
+  color: green;
+  display: inherit;
+}
+.card {
+  background-color: rgb(216, 245, 214);
+  height: 500px;
+}
+.header {
+  color: coral;
+  font-weight: 200;
+  font-size: xx-large;
+}

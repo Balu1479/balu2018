@@ -3,8 +3,8 @@ import ACCOUNT_OBJECT from "@salesforce/schema/Account";
 import NAME_FIELD from "@salesforce/schema/Account.Name";
 import WEBSITE_FIELD from "@salesforce/schema/Account.Website";
 import INDUSTRY_FIELD from "@salesforce/schema/Account.Industry";
-import { ShowToastEvent } from "lightning/platformShowToastEvent";
 import { createRecord } from 'lightning/uiRecordApi';
+import { showToastMessage } from 'c/showToastMessage';
 export default class AccountCredOperations extends LightningElement {
     accountObject = ACCOUNT_OBJECT;
     myFields = [NAME_FIELD, WEBSITE_FIELD, INDUSTRY_FIELD];
@@ -14,16 +14,16 @@ export default class AccountCredOperations extends LightningElement {
     isAvailableAccount = false;
     craeteAccountRecord() {
         console.log('Successfully Account record is created');
-        this.showToastMessage('Account record is created successfully', 'Success', 'Account record is created successfully');
+        showToastMessage('Account record is created successfully', 'Success', 'Account record is created successfully');
     }
-    showToastMessage(title, variant, message) {
+    /* showToastMessage(title, variant, message) {
         const event = new ShowToastEvent({
             title: title,
             variant: variant,
             message: message
         });
         this.dispatchEvent(event);
-    }
+    } */
     handleChange(event) {
         this.accountId = undefined;
         if (event.target.label === 'Account Name') {
@@ -41,12 +41,12 @@ export default class AccountCredOperations extends LightningElement {
         createRecord(recordInput)
             .then(account => {
                 this.accountId = account.id;
-                this.showToastMessage('Success', 'Success', 'Account created');
+                showToastMessage('Success', 'Success', 'Account created');
                 //this.accountName = this.accountName;
                 this.isAvailableAccount = true;
             })
             .catch(error => {
-                this.showToastMessage('Error while creating record', 'error', error.body.message);
+                showToastMessage('Error while creating record', 'error', error.body.message);
         });
     }
     cancilAccount() {

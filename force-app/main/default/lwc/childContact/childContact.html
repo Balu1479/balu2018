@@ -1,0 +1,84 @@
+<template>
+    <lightning-card title="List of Account Records">
+        <lightning-button slot="actions" label="Delete" onclick={deleteRecords}></lightning-button><br />
+        <lightning-button slot="actions" label="Show Contacts" onclick={showAllContacts}></lightning-button><br />
+        <table class="slds-table slds-table_cell-buffer slds-table_bordered"
+            aria-labelledby="element-with-table-label other-element-with-table-label">
+            <thead>
+                <tr>
+                    <th><lightning-input onchange={allSelected} type="checkbox"></lightning-input></th>
+                    <th scope="col">
+                        <div class="slds-truncate" title="Name">Name</div>
+                    </th>
+                    <th scope="col">
+                        <div class="slds-truncate" title="Phone">Phone</div>
+                    </th>
+                    <th scope="col">
+                        <div class="slds-truncate" title="Action">Action</div>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <template for:each={accountsAndContacts} for:item="acc" for:index="index">
+                    <tr key={acc.id}>
+                        <td><lightning-input type="checkbox" value={acc.name} data-id={acc.id}></lightning-input>
+                        </td>
+                        <td>{acc.name}</td>
+                        <td>{acc.phone}</td>
+                        <td>
+                            <lightning-button slot="actions" label="Click Me" onclick={handleClickMe} data-name={index}
+                                data-id={acc.id}></lightning-button>&nbsp;
+                            <lightning-button slot="actions" label="Update" onclick={updateRecords}
+                                data-name={acc.id}></lightning-button>&nbsp;
+                            <lightning-button slot="actions" label="Show Contacts" onclick={showContacts}
+                                data-id={acc.id}></lightning-button>
+                        </td>
+                    </tr>
+                </template>
+            </tbody>
+        </table>
+    </lightning-card>
+    <lightning-card title="List of Contact Records">
+        <lightning-button slot="actions" label="Delete" onclick={deleteRecords}></lightning-button><br />
+        <lightning-button slot="actions" label="Show Contacts" onclick={showAllContacts}></lightning-button><br />
+        <table class="slds-table slds-table_cell-buffer slds-table_bordered"
+            aria-labelledby="element-with-table-label other-element-with-table-label">
+            <thead>
+                <tr>
+                    <th><lightning-input onchange={allSelected} type="checkbox"></lightning-input></th>
+                    <th scope="col">
+                        <div class="slds-truncate" title="Name">Name</div>
+                    </th>
+                    <th scope="col">
+                        <div class="slds-truncate" title="LastName">Last Name</div>
+                    </th>
+                    <th scope="col">
+                        <div class="slds-truncate" title="Email">Account Id</div>
+                    </th>
+                    <th scope="col">
+                        <div class="slds-truncate" title="Action">Action</div>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <template for:each={contactsFromParent} for:item="con" for:index="index">
+                    <tr key={con.Id}>
+                        <td><lightning-input type="checkbox" value={con.firstName} data-id={con.Id}></lightning-input>
+                        </td>
+                        <td>{con.firstName}</td>
+                        <td class="slds-cell-wrap">{con.lastName}</td>
+                        <td>{con.accountId}</td>
+                        <td>
+                            <lightning-button slot="actions" label="Click Me" onclick={handleClickMe} data-name={index}
+                                data-id={con.Id}></lightning-button>&nbsp;
+                            <lightning-button slot="actions" label="Update" onclick={updateRecords}
+                                data-name={con.Id}></lightning-button>&nbsp;
+                            <lightning-button slot="actions" label="Show Account" onclick={showAccount}
+                                data-id={con.accountId}></lightning-button>
+                        </td>
+                    </tr>
+                </template>
+            </tbody>
+        </table>
+    </lightning-card>
+</template>
